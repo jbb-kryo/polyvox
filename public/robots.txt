@@ -1,0 +1,61 @@
+# robots.txt for PolyVOX
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://polyvox.app/sitemap.xml
+
+# Crawl-delay for bots (in seconds)
+Crawl-delay: 1
+
+# Disallow crawling of API endpoints and user data
+Disallow: /api/
+Disallow: /admin/
+Disallow: /_/
+
+# Allow crawling of public pages
+Allow: /docs
+Allow: /about
+Allow: /features
+
+# Common bot user-agents
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: YandexBot
+Allow: /
+
+User-agent: facebot
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+# Block bad bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /

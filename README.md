@@ -1,0 +1,381 @@
+# PolyVOX
+
+A sophisticated automated trading platform for Polymarket prediction markets, featuring five specialized trading modules with real-time analytics and comprehensive risk management.
+
+![PolyVOX Dashboard](https://img.shields.io/badge/version-1.1.0-green) ![License](https://img.shields.io/badge/license-MIT-blue) ![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue)
+
+## Overview
+
+PolyVOX is an advanced trading system designed for Polymarket that combines multiple algorithmic trading strategies to identify and execute profitable opportunities across prediction markets. Built with React, TypeScript, and Supabase, it provides a professional-grade interface for both manual and automated trading.
+
+## Key Features
+
+### Trading Modules
+
+#### 1. ArbitrageHunter
+Identifies and executes cross-market arbitrage opportunities by detecting price discrepancies across different prediction markets.
+
+- Real-time opportunity scanning
+- Automated execution with configurable thresholds
+- Position tracking and P&L monitoring
+- Historical performance analytics
+
+#### 2. TrendRider
+Follows market momentum and trend patterns to capitalize on sustained directional movements.
+
+- Momentum detection algorithms
+- Trend strength analysis
+- Dynamic position sizing
+- Exit strategy optimization
+
+#### 3. SnipeMaster
+Places patient limit orders below market prices to capture mean reversion opportunities.
+
+- Smart order placement
+- Market depth analysis
+- Fill probability estimation
+- Risk-adjusted sizing
+
+#### 4. WhaleWatcher
+Tracks and copies positions from successful whale traders with proven track records.
+
+- Whale identification and ranking
+- Performance leaderboard
+- Automated position copying
+- Copy trading analytics
+
+#### 5. ValueMiner
+Implements value betting strategies with edge calculation and Kelly Criterion sizing.
+
+- Statistical edge detection
+- External data integration
+- Kelly Criterion position sizing
+- Value opportunity scanner
+
+### Core Features
+
+- **Real-time Market Data**: Live market feeds with up-to-date pricing and volume
+- **Comprehensive Analytics**: Performance tracking, P&L attribution, and risk metrics
+- **Position Management**: Unified view of all active positions across modules
+- **Trade History**: Complete audit trail of all executed trades
+- **Risk Controls**: Configurable limits and safeguards
+- **Wallet Integration**: Secure wallet connection via ethers.js
+- **Demo Mode**: Test strategies without real capital
+
+## Technology Stack
+
+- **Frontend**: React 18, TypeScript, Vite
+- **Styling**: Tailwind CSS
+- **Charts**: Recharts
+- **Icons**: Lucide React
+- **Database**: Supabase (PostgreSQL)
+- **Blockchain**: ethers.js
+- **State Management**: React Hooks
+- **Notifications**: react-hot-toast
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18+ and npm
+- Supabase account (free tier available)
+- Polymarket account (for live trading)
+- Ethereum wallet with private key (for trading execution)
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/jbb-kryo/polyvox.git
+cd polyvox
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Configure environment variables:
+
+Create a `.env` file in the root directory:
+```env
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+4. Set up the database:
+
+The database migrations are located in `supabase/migrations/`. Run them in order through your Supabase dashboard or CLI:
+
+```bash
+# If using Supabase CLI
+supabase db push
+```
+
+5. Start the development server:
+```bash
+npm run dev
+```
+
+The application will be available at `http://localhost:5173`
+
+### Building for Production
+
+```bash
+npm run build
+npm run preview
+```
+
+## Configuration
+
+### Initial Setup
+
+1. **Demo Mode**: Start in demo mode to explore features without connecting a wallet
+2. **Wallet Connection**: Connect your Ethereum wallet through the Settings panel
+3. **API Configuration**: Configure Polymarket API settings (CORS proxy if needed)
+4. **Module Settings**: Customize each trading module's parameters
+
+### Wallet Setup
+
+Navigate to Settings and enter:
+- **Wallet Address**: Your Ethereum wallet address
+- **Private Key**: Your wallet's private key (stored securely in browser)
+- **Demo Mode**: Toggle for paper trading vs live execution
+
+**Security Note**: Private keys are stored locally in your browser and never transmitted to external servers. See [SECURITY.md](SECURITY.md) for best practices.
+
+### Module Configuration
+
+Each trading module has configurable parameters:
+
+- **Minimum Edge**: Minimum expected profit threshold
+- **Maximum Position Size**: Risk limit per position
+- **Stop Loss**: Automatic exit threshold
+- **Take Profit**: Profit target levels
+- **Execution Delay**: Time delays for order placement
+
+## Usage
+
+### Dashboard
+
+The main dashboard provides:
+- Portfolio overview with total capital and P&L
+- Active positions summary
+- Recent activity feed
+- Top performing markets
+- Module status indicators
+
+### Market Browser
+
+Browse and analyze Polymarket markets:
+- Search and filter markets
+- View market details and statistics
+- Check order book depth
+- Monitor volume and activity
+
+### Analytics
+
+Comprehensive analytics dashboard featuring:
+- Performance charts (daily, weekly, monthly)
+- P&L attribution by module
+- Risk metrics and exposure analysis
+- Trade calendar with daily breakdown
+- Win rate and profitability stats
+
+### Trading Modules
+
+Access individual modules to:
+- View detected opportunities
+- Monitor active positions
+- Configure module settings
+- Review trade history
+- Analyze module-specific metrics
+
+## Database Schema
+
+PolyVOX uses Supabase for data persistence. The database includes:
+
+- **Module-specific tables**: Opportunities, positions, and trades for each module
+- **Analytics tables**: Performance metrics and trade analytics
+- **Configuration tables**: User settings and watchlists
+- **Security**: Row Level Security (RLS) policies on all tables
+
+See [DATABASE_SETUP.md](DATABASE_SETUP.md) for complete schema documentation.
+
+## API Integration
+
+### Polymarket API
+
+PolyVOX integrates with the Polymarket CLOB API:
+- Base URL: `https://clob.polymarket.com`
+- Real-time market data
+- Order book information
+- Trade execution endpoints
+
+### CORS Proxy
+
+For browser-based requests, you may need to enable CORS proxy mode in Settings if you encounter cross-origin issues.
+
+## Development
+
+### Project Structure
+
+```
+polyvox/
+├── src/
+│   ├── components/          # React components
+│   │   ├── Analytics/       # Analytics dashboard
+│   │   ├── ArbitrageHunter/ # Arbitrage module UI
+│   │   ├── SnipeMaster/     # Snipe module UI
+│   │   ├── TrendRider/      # Trend module UI
+│   │   ├── ValueMiner/      # Value module UI
+│   │   └── WhaleWatcher/    # Whale module UI
+│   ├── services/            # Business logic
+│   │   ├── database/        # Supabase operations
+│   │   ├── polymarket.ts    # Polymarket API
+│   │   └── *Scanner.ts      # Module algorithms
+│   ├── types/               # TypeScript definitions
+│   └── utils/               # Utility functions
+├── supabase/
+│   └── migrations/          # Database migrations
+└── public/                  # Static assets
+```
+
+### Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
+- `npm run typecheck` - TypeScript type checking
+
+### Code Style
+
+- TypeScript strict mode enabled
+- ESLint for code quality
+- Functional components with hooks
+- Tailwind CSS for styling
+- Modular architecture with clear separation of concerns
+
+## SEO & Sharing
+
+PolyVOX is fully optimized for search engines and social media sharing:
+
+### Implemented Features
+
+- **Meta Tags**: Comprehensive title, description, and keywords
+- **Open Graph**: Rich previews for Facebook, LinkedIn, and other platforms
+- **Twitter Cards**: Optimized sharing on Twitter/X with large image cards
+- **Structured Data**: JSON-LD schema for enhanced search results
+- **PWA Support**: Progressive Web App with manifest.json for app-like experience
+- **Sitemap**: XML sitemap for search engine crawling
+- **Robots.txt**: Crawler guidance and optimization
+- **Security Headers**: Enhanced trust signals via _headers file
+
+### Social Media Images
+
+To complete the SEO setup, create these images:
+
+1. **og-image.png** (1200x630px) - For Facebook/LinkedIn sharing
+2. **twitter-image.png** (1200x628px) - For Twitter/X cards
+3. **App icons** (16x16 to 512x512) - For PWA and bookmarks
+4. **Screenshots** - Desktop and mobile views
+
+See [SEO_GUIDE.md](SEO_GUIDE.md) for detailed instructions on creating these assets and maximizing visibility.
+
+### Going Viral
+
+The application includes optimizations to improve viral potential:
+
+- Compelling social media previews with rich metadata
+- Fast load times and performance optimization
+- Mobile-friendly responsive design
+- Easy sharing functionality
+- Professional branding and visual appeal
+
+For a comprehensive guide on launching and promoting PolyVOX, see [SEO_GUIDE.md](SEO_GUIDE.md).
+
+## Security
+
+### Best Practices
+
+1. **Never commit private keys** to version control
+2. **Use demo mode** for testing new strategies
+3. **Start with small positions** when going live
+4. **Enable stop losses** on all positions
+5. **Review settings** before enabling auto-trading
+6. **Monitor positions** regularly
+7. **Keep software updated** with latest security patches
+
+See [SECURITY.md](SECURITY.md) for detailed security policies and vulnerability reporting.
+
+## Risk Disclaimer
+
+**IMPORTANT**: Trading prediction markets involves substantial risk of loss. Past performance does not guarantee future results.
+
+- This software is provided for educational and research purposes
+- Use at your own risk with capital you can afford to lose
+- No guarantees of profitability are made or implied
+- Always conduct your own research before trading
+- Consider consulting a financial advisor
+- The authors assume no liability for trading losses
+
+## Roadmap
+
+### Planned Features
+
+- [ ] Advanced backtesting engine
+- [ ] Multi-account support
+- [ ] Mobile responsive design improvements
+- [ ] Real-time WebSocket market feeds
+- [ ] Machine learning signal generation
+- [ ] Strategy builder interface
+- [ ] Social trading features
+- [ ] API access for external integrations
+- [ ] Multi-platform arbitrage (beyond Polymarket)
+- [ ] Advanced risk management tools
+
+## Contributing
+
+Contributions are welcome! Please read our contributing guidelines before submitting PRs.
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Development Guidelines
+
+- Follow existing code style and conventions
+- Write TypeScript with proper typing
+- Add comments for complex logic
+- Test thoroughly before submitting
+- Update documentation as needed
+
+## Support
+
+- **Issues**: [GitHub Issues](https://github.com/jbb-kryo/polyvox/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/jbb-kryo/polyvox/discussions)
+- **Documentation**: See `/src/components/Documentation.tsx` in app
+
+## License
+
+This project is licensed under the MIT License - see [LICENSE](LICENSE) for details.
+
+## Acknowledgments
+
+- Polymarket for providing the prediction market infrastructure
+- Supabase for the database and authentication platform
+- The React and TypeScript communities
+- All contributors and supporters of this project
+
+## Disclaimer
+
+This project is not affiliated with, endorsed by, or sponsored by Polymarket. All trademarks are the property of their respective owners.
+
+---
+
+**Made with ⚡ by the PolyVOX team**
+
+For questions or support, please open an issue on GitHub.

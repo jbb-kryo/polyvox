@@ -1,0 +1,86 @@
+<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e293b;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0ea5e9;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#06b6d4;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bgGrad)"/>
+
+  <!-- Grid Pattern -->
+  <g opacity="0.1">
+    <line x1="0" y1="100" x2="1200" y2="100" stroke="#0ea5e9" stroke-width="1"/>
+    <line x1="0" y1="200" x2="1200" y2="200" stroke="#0ea5e9" stroke-width="1"/>
+    <line x1="0" y1="300" x2="1200" y2="300" stroke="#0ea5e9" stroke-width="1"/>
+    <line x1="0" y1="400" x2="1200" y2="400" stroke="#0ea5e9" stroke-width="1"/>
+    <line x1="0" y1="500" x2="1200" y2="500" stroke="#0ea5e9" stroke-width="1"/>
+    <line x1="200" y1="0" x2="200" y2="630" stroke="#0ea5e9" stroke-width="1"/>
+    <line x1="400" y1="0" x2="400" y2="630" stroke="#0ea5e9" stroke-width="1"/>
+    <line x1="600" y1="0" x2="600" y2="630" stroke="#0ea5e9" stroke-width="1"/>
+    <line x1="800" y1="0" x2="800" y2="630" stroke="#0ea5e9" stroke-width="1"/>
+    <line x1="1000" y1="0" x2="1000" y2="630" stroke="#0ea5e9" stroke-width="1"/>
+  </g>
+
+  <!-- Trading Chart Visualization -->
+  <g opacity="0.3" stroke="url(#accentGrad)" stroke-width="3" fill="none">
+    <polyline points="100,400 200,350 300,380 400,300 500,320 600,250 700,280 800,200 900,230 1100,150"/>
+  </g>
+
+  <!-- Logo/Icon -->
+  <g transform="translate(100, 100)">
+    <circle cx="50" cy="50" r="48" fill="url(#accentGrad)"/>
+    <polyline points="30,70 40,55 50,60 60,40 70,45" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="30" cy="70" r="3" fill="#ffffff"/>
+    <circle cx="40" cy="55" r="3" fill="#ffffff"/>
+    <circle cx="50" cy="60" r="3" fill="#ffffff"/>
+    <circle cx="60" cy="40" r="3" fill="#ffffff"/>
+    <circle cx="70" cy="45" r="3" fill="#ffffff"/>
+  </g>
+
+  <!-- Main Title -->
+  <text x="220" y="150" font-family="Arial, sans-serif" font-size="72" font-weight="bold" fill="#ffffff">
+    PolyVOX
+  </text>
+
+  <!-- Subtitle -->
+  <text x="220" y="210" font-family="Arial, sans-serif" font-size="36" font-weight="normal" fill="#94a3b8">
+    Advanced PolyMarket Trading Platform
+  </text>
+
+  <!-- Features -->
+  <g font-family="Arial, sans-serif" font-size="24" fill="#e2e8f0">
+    <text x="220" y="280">5 Specialized Trading Modules</text>
+    <text x="220" y="320">Real-Time Market Analytics</text>
+    <text x="220" y="360">Automated Execution</text>
+    <text x="220" y="400">Professional-Grade Interface</text>
+  </g>
+
+  <!-- Module Pills -->
+  <g transform="translate(220, 440)">
+    <rect x="0" y="0" width="160" height="40" rx="20" fill="#0ea5e9" opacity="0.8"/>
+    <text x="80" y="27" font-family="Arial, sans-serif" font-size="16" font-weight="600" fill="#ffffff" text-anchor="middle">ArbitrageHunter</text>
+
+    <rect x="180" y="0" width="130" height="40" rx="20" fill="#0ea5e9" opacity="0.8"/>
+    <text x="245" y="27" font-family="Arial, sans-serif" font-size="16" font-weight="600" fill="#ffffff" text-anchor="middle">TrendRider</text>
+
+    <rect x="330" y="0" width="130" height="40" rx="20" fill="#0ea5e9" opacity="0.8"/>
+    <text x="395" y="27" font-family="Arial, sans-serif" font-size="16" font-weight="600" fill="#ffffff" text-anchor="middle">SnipeMaster</text>
+
+    <rect x="480" y="0" width="150" height="40" rx="20" fill="#0ea5e9" opacity="0.8"/>
+    <text x="555" y="27" font-family="Arial, sans-serif" font-size="16" font-weight="600" fill="#ffffff" text-anchor="middle">WhaleWatcher</text>
+
+    <rect x="650" y="0" width="120" height="40" rx="20" fill="#0ea5e9" opacity="0.8"/>
+    <text x="710" y="27" font-family="Arial, sans-serif" font-size="16" font-weight="600" fill="#ffffff" text-anchor="middle">ValueMiner</text>
+  </g>
+
+  <!-- CTA -->
+  <text x="220" y="560" font-family="Arial, sans-serif" font-size="28" font-weight="600" fill="#06b6d4">
+    Open Source • Free • Powerful
+  </text>
+</svg>
