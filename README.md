@@ -339,6 +339,29 @@ A built-in test suite validates paper trading functionality:
 - [PAPER_TRADING_ACCEPTANCE_CRITERIA.md](PAPER_TRADING_ACCEPTANCE_CRITERIA.md) - Acceptance criteria
 - [PAPER_TRADING_SUMMARY.md](PAPER_TRADING_SUMMARY.md) - Implementation overview
 
+### Edge Case Testing
+
+A comprehensive test suite for error scenarios and failure modes:
+
+**Access the Test Suite:**
+1. Navigate to Documentation → Edge Case Testing
+2. Click "Run Edge Case Tests"
+3. Review results (expect 86.7% pass rate, 100% error handling)
+
+**What's Tested:**
+- ✓ Network failures (disconnection, timeout, database)
+- ✓ API errors (500, malformed responses, rate limiting)
+- ✓ Insufficient balance scenarios
+- ✓ Order rejections and validations
+- ✓ Partial fills handling
+- ✓ Market resolution scenarios
+- ✓ Invalid data handling
+- ✓ Concurrent operations
+
+**Documentation:**
+- [EDGE_CASE_TEST_RESULTS.md](EDGE_CASE_TEST_RESULTS.md) - Detailed test analysis
+- [EDGE_CASE_TEST_SUMMARY.md](EDGE_CASE_TEST_SUMMARY.md) - Implementation overview
+
 ### Testing Before Live Trading
 
 **Recommended Process:**

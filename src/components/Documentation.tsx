@@ -16,6 +16,7 @@ import {
   TestTube
 } from 'lucide-react';
 import PaperTradingTest from './PaperTradingTest';
+import EdgeCaseTest from './EdgeCaseTest';
 
 export default function Documentation() {
   const [activeSection, setActiveSection] = useState('getting-started');
@@ -27,6 +28,7 @@ export default function Documentation() {
     { id: 'scaling', label: 'Scaling Your Capital', icon: TrendingUp },
     { id: 'risk-management', label: 'Risk Management', icon: Shield },
     { id: 'paper-trading-test', label: 'Paper Trading Test', icon: TestTube },
+    { id: 'edge-case-test', label: 'Edge Case Testing', icon: Shield },
     { id: 'faq', label: 'FAQ & Tips', icon: Info }
   ];
 
@@ -636,6 +638,19 @@ export default function Documentation() {
               </p>
             </div>
             <PaperTradingTest />
+          </div>
+        );
+
+      case 'edge-case-test':
+        return (
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-3xl font-bold text-white mb-4">Edge Case Testing</h2>
+              <p className="text-slate-300 mb-6">
+                Test error handling and failure scenarios including network issues, API errors, and invalid data.
+              </p>
+            </div>
+            <EdgeCaseTest />
           </div>
         );
 
