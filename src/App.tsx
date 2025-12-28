@@ -263,9 +263,7 @@ function App() {
       case 'dashboard':
         return (
           <DashboardHome
-            stats={stats}
             modules={modules}
-            activities={activities}
             topMarkets={topMarkets}
             onViewAllMarkets={() => setCurrentView('markets')}
             onModuleClick={(moduleId) => setCurrentView(moduleId as View)}
