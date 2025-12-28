@@ -350,12 +350,12 @@ This document outlines all remaining tasks to make PolyVOX fully functional, liv
 **Prompt:** "Add MetaMask and WalletConnect support as alternatives to private key entry. Users should be able to connect their wallet and sign transactions via browser extension or mobile."
 
 **Acceptance Criteria:**
-- [ ] MetaMask connection option
-- [ ] WalletConnect support
-- [ ] Transaction signing via wallet
-- [ ] Account switching detection
-- [ ] Disconnect functionality
-- [ ] Clear connection status
+- [X] MetaMask connection option
+- [X] WalletConnect support
+- [X] Transaction signing via wallet
+- [X] Account switching detection
+- [X] Disconnect functionality
+- [X] Clear connection status
 
 **Files to Create:**
 - `src/services/walletProviders.ts`
