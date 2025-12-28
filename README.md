@@ -252,6 +252,32 @@ PolyVOX is optimized for fast load times and smooth 60fps interactions:
 
 See [FRONTEND_PERFORMANCE.md](FRONTEND_PERFORMANCE.md) for detailed documentation.
 
+### Error Tracking & Logging
+
+Comprehensive error tracking system that captures and monitors all application errors:
+
+**Features:**
+- Automatic error logging to database
+- Visual error dashboard with filters
+- Real-time notifications for critical errors
+- Full stack traces and user context
+- Error rate monitoring with charts
+- Batched logging for performance
+
+**Components:**
+- `errorTracking` service - Core tracking functionality
+- `ErrorDashboard` - Monitor and manage errors
+- `ErrorRateMonitor` - Visualize error trends
+- `ErrorBoundary` - React error boundary integration
+
+**Severity Levels:**
+- **Critical** - App crashes, immediate notifications
+- **Error** - Feature failures, logged for review
+- **Warning** - Recoverable issues, validation errors
+- **Info** - Informational logging
+
+See [ERROR_TRACKING_GUIDE.md](ERROR_TRACKING_GUIDE.md) for detailed documentation.
+
 ## API Integration
 
 ### Polymarket API

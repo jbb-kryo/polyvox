@@ -55,8 +55,9 @@ const Documentation = lazy(() => import('./components/Documentation'));
 const PositionsOverview = lazy(() => import('./components/PositionsOverview'));
 const PositionHistoryView = lazy(() => import('./components/PositionHistoryView'));
 const RiskLimitsManager = lazy(() => import('./components/RiskLimitsManager'));
+const ErrorDashboard = lazy(() => import('./components/ErrorDashboard').then(m => ({ default: m.ErrorDashboard })));
 
-type View = 'dashboard' | 'modules' | 'analytics' | 'markets' | 'positions' | 'history' | 'risk-limits' | 'arbitrage-hunter' | 'trendrider' | 'snipe-master' | 'whale-watcher' | 'value-miner' | 'docs';
+type View = 'dashboard' | 'modules' | 'analytics' | 'markets' | 'positions' | 'history' | 'risk-limits' | 'arbitrage-hunter' | 'trendrider' | 'snipe-master' | 'whale-watcher' | 'value-miner' | 'docs' | 'errors';
 
 function App() {
   const { user, profile, loading: authLoading, signOut } = useAuth();
@@ -330,6 +331,12 @@ function App() {
               <Documentation />
             </Suspense>
           </div>
+        );
+      case 'errors':
+        return (
+          <Suspense fallback={<ComponentLoadingFallback name="Error Dashboard" />}>
+            <ErrorDashboard />
+          </Suspense>
         );
       case 'arbitrage-hunter':
         return (

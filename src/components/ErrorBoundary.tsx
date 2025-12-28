@@ -30,13 +30,30 @@ export class ErrorBoundary extends Component<Props, State> {
     };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+  async componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('ErrorBoundary caught an error:', error, errorInfo);
 
     this.setState({
       error,
       errorInfo,
     });
+
+    try {
+      const { errorTracking } = await import('../services/errorTracking');
+      await errorTracking.logErrorSync({
+        errorType: 'react_error_boundary',
+        errorMessage: error.message,
+        errorStack: error.stack,
+        severity: 'critical',
+        componentName: errorInfo.componentStack?.split('\n')[1]?.trim(),
+        context: {
+          componentStack: errorInfo.componentStack,
+          errorName: error.name,
+        },
+      });
+    } catch (logError) {
+      console.error('Failed to log error:', logError);
+    }
 
     if (this.props.onError) {
       this.props.onError(error, errorInfo);
