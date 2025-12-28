@@ -442,14 +442,14 @@ This document outlines all remaining tasks to make PolyVOX fully functional, liv
 **Prompt:** "Test edge cases and error scenarios: network failures, API errors, insufficient balance, rejected orders, partial fills, market resolution, etc."
 
 **Test Cases:**
-- [ ] Network disconnection during trade
-- [ ] Polymarket API returns 500 error
-- [ ] Insufficient USDC balance
-- [ ] Order rejected by CLOB
-- [ ] Partial order fills
-- [ ] Market resolves while position open
-- [ ] Extremely high gas prices
-- [ ] Multiple simultaneous trades
+- [X] Network disconnection during trade
+- [X] Polymarket API returns 500 error
+- [X] Insufficient USDC balance
+- [X] Order rejected by CLOB
+- [X] Partial order fills
+- [X] Market resolves while position open
+- [X] Extremely high gas prices
+- [X] Multiple simultaneous trades
 
 ---
 
