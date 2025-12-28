@@ -56,22 +56,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Virtual scrolling implementation for performance with large datasets
 
 ### Security & Performance Fixes
-- **Missing Foreign Key Indexes**: Added 4 critical indexes for better join performance
-  - arbitrage_trades.user_id
-  - error_logs.resolved_by
-  - snipe_trades.user_id
-  - trend_trades.user_id
+- **Missing Foreign Key Indexes**: Added 16 critical indexes for better join performance
+  - First batch: arbitrage_trades.user_id, error_logs.resolved_by, snipe_trades.user_id, trend_trades.user_id
+  - Second batch: arbitrage_positions, error_logs, notifications, order_fills, orders, snipe_orders, snipe_positions, trade_analytics, trading_activity_logs, trend_positions, whale_alerts, whale_copied_positions (all user_id and related foreign keys)
 - **RLS Policy Optimization**: Fixed 15 RLS policies to use `(select auth.uid())` pattern
   - Prevents re-evaluation of auth function for each row
   - Significantly improves query performance at scale
   - Affects: notifications, notification_preferences, error_logs, trading_activity_logs
-- **Removed 81 Unused Indexes**: Improved write performance by dropping unused indexes
+- **Removed 85 Unused Indexes**: Improved write performance by dropping unused indexes
   - Orders, positions, notifications, error logs, and trading activity tables
   - Reduces storage overhead and speeds up inserts/updates
 - **Fixed Multiple Permissive Policies**: Consolidated duplicate policies on error_rate_metrics
-- **Function Security Hardening**: Set explicit search_path on 7 database functions
+- **Function Security Hardening**: Set immutable search_path on 10 database functions
   - Prevents search path manipulation attacks
-  - Functions: notification preferences, error tracking, trading log management
+  - Uses empty search_path with explicit schema qualification
+  - Functions: notification preferences, error tracking, trading log management, statistics functions
 
 ## [1.1.0] - 2024-12-27
 
