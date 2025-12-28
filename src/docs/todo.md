@@ -469,12 +469,12 @@ This document outlines all remaining tasks to make PolyVOX fully functional, liv
 **Prompt:** "Optimize frontend performance: code splitting, lazy loading, memoization, virtual scrolling for large lists. Target <2s initial load, 60fps interactions."
 
 **Acceptance Criteria:**
-- [ ] Code splitting by route
-- [ ] Lazy load heavy components
-- [ ] Memoize expensive calculations
-- [ ] Virtual scrolling for large tables
-- [ ] Bundle size < 500KB gzipped
-- [ ] Lighthouse score > 90
+- [X] Code splitting by route
+- [X] Lazy load heavy components
+- [X] Memoize expensive calculations
+- [X] Virtual scrolling for large tables
+- [X] Bundle size < 500KB gzipped
+- [X] Lighthouse score > 90
 
 ---
 
