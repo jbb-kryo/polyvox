@@ -16,7 +16,7 @@ export async function fetchPlatformMetrics(): Promise<PlatformMetrics> {
 
     const metrics: PlatformMetrics = {
       totalTransactionVolume: 0,
-      appVersion: '1.1.0'
+      appVersion: '1.1.5'
     };
 
     data?.forEach(metric => {
@@ -32,7 +32,7 @@ export async function fetchPlatformMetrics(): Promise<PlatformMetrics> {
     console.error('Error fetching platform metrics:', error);
     return {
       totalTransactionVolume: 0,
-      appVersion: '1.1.0'
+      appVersion: '1.1.5'
     };
   }
 }

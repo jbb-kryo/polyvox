@@ -2,7 +2,7 @@
 
 A sophisticated automated trading platform for Polymarket prediction markets, featuring five specialized trading modules with real-time analytics and comprehensive risk management.
 
-![PolyVOX Dashboard](https://img.shields.io/badge/version-1.1.0-green) ![License](https://img.shields.io/badge/license-MIT-blue) ![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue)
+![PolyVOX Dashboard](https://img.shields.io/badge/version-1.1.5-green) ![License](https://img.shields.io/badge/license-MIT-blue) ![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue)
 
 ## Overview
 

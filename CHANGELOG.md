@@ -7,6 +7,54 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.5] - 2024-12-28
+
+### Added
+- **Error Tracking System**: Comprehensive error monitoring and analysis
+  - Global error boundary with graceful error handling
+  - Error tracking service with automatic categorization (critical, error, warning, info)
+  - Error dashboard with statistics and filtering
+  - Error rate monitoring component
+  - Real-time error notifications
+  - Database tables for error persistence (`error_logs`, `error_summaries`)
+  - Automatic error aggregation and deduplication
+  - Stack trace and context preservation
+  - User-friendly error display with recovery options
+  - Error export capability for external analysis
+  - Configurable error retention policies
+
+- **Trading Activity Logs System**: Complete audit trail for all trading operations
+  - Comprehensive activity logging for all trading modules
+  - Searchable log viewer with advanced filtering
+  - Multiple log levels: debug, info, warn, error
+  - Performance tracking with duration metrics
+  - Success/failure tracking for all operations
+  - CSV export for external analysis and compliance
+  - Configurable retention policy (7-365 days)
+  - Module-specific logging (ArbitrageHunter, SnipeMaster, TrendRider, WhaleWatcher, ValueMiner)
+  - Activity types: scans, executions, orders, positions, risk checks, etc.
+  - Virtual scrolling for handling large log volumes
+  - Statistics dashboard with success rates and performance metrics
+  - ActivityTimer class for automatic performance measurement
+  - Database tables for log persistence (`trading_activity_logs`)
+  - Database functions for log statistics and timeline queries
+  - Log retention manager component for storage management
+  - Helper methods for common logging patterns
+  - Batched logging for optimal performance
+
+### Documentation
+- Added `ERROR_TRACKING_GUIDE.md` with comprehensive error tracking documentation
+- Added `TRADING_ACTIVITY_LOGS_GUIDE.md` with complete logging guide and examples
+- Updated README.md with error tracking and activity logs sections
+- Added usage examples and best practices for both systems
+
+### Technical Improvements
+- Enhanced error handling across all components
+- Optimized database queries with additional indexes
+- Improved RLS policies for error logs and activity logs
+- Added batched logging for reduced database load
+- Virtual scrolling implementation for performance with large datasets
+
 ## [1.1.0] - 2024-12-27
 
 ### Added
@@ -201,6 +249,7 @@ PolyVOX 1.0.0 marks the first public release of our automated trading platform f
 
 ## Version History
 
+- **1.1.5** (2024-12-28) - Error tracking and trading activity logs
 - **1.1.0** (2024-12-27) - Enhanced trading features and performance
 - **1.0.0** (2024-12-26) - Initial public release
 - **0.1.0** (2024-12) - Internal beta testing
@@ -209,6 +258,7 @@ PolyVOX 1.0.0 marks the first public release of our automated trading platform f
 
 For more details on each release, see the [Releases](https://github.com/jbb-kryo/polyvox/releases) page.
 
-[Unreleased]: https://github.com/jbb-kryo/polyvox/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/jbb-kryo/polyvox/compare/v1.1.5...HEAD
+[1.1.5]: https://github.com/jbb-kryo/polyvox/compare/v1.1.0...v1.1.5
 [1.1.0]: https://github.com/jbb-kryo/polyvox/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/jbb-kryo/polyvox/releases/tag/v1.0.0

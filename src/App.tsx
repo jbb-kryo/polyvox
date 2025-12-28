@@ -117,7 +117,7 @@ function App() {
   const [topMarkets, setTopMarkets] = useState<PolymarketMarket[]>([]);
   const [platformMetrics, setPlatformMetrics] = useState<PlatformMetrics>({
     totalTransactionVolume: 0,
-    appVersion: '1.1.0'
+    appVersion: '1.1.5'
   });
 
   const [modules, setModules] = useState<Module[]>([

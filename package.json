@@ -1,7 +1,7 @@
 {
   "name": "polyvox",
   "private": true,
-  "version": "1.1.0",
+  "version": "1.1.5",
   "description": "Automated trading platform for Polymarket prediction markets",
   "author": "PolyVOX Contributors",
   "license": "MIT",
