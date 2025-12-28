@@ -83,7 +83,7 @@
   }
 }
 
-@screen xs {
+@media (min-width: 475px) {
   .xs\:inline {
     display: inline;
   }
