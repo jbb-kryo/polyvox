@@ -8,6 +8,7 @@ import {
   OrderStatus,
   OrderSide
 } from '../orderExecution';
+import { queryOptimizer, PaginationParams, PaginatedResult } from './queryOptimizer';
 
 export interface OrderSummary {
   totalOrders: number;
@@ -52,58 +53,76 @@ export async function getUserOrders(
   },
   limit: number = 100
 ): Promise<Order[]> {
-  let query = supabase
-    .from('orders')
-    .select('*')
-    .eq('user_id', userId);
+  const result = await queryOptimizer.measureQuery(
+    'getUserOrders',
+    async () => {
+      let query = supabase
+        .from('orders')
+        .select('*')
+        .eq('user_id', userId);
 
-  if (filters?.status) {
-    query = query.eq('status', filters.status);
-  }
+      if (filters?.status) {
+        query = query.eq('status', filters.status);
+      }
 
-  if (filters?.moduleType) {
-    query = query.eq('module_type', filters.moduleType);
-  }
+      if (filters?.moduleType) {
+        query = query.eq('module', filters.moduleType);
+      }
 
-  if (filters?.marketId) {
-    query = query.eq('market_id', filters.marketId);
-  }
+      if (filters?.marketId) {
+        query = query.eq('market_id', filters.marketId);
+      }
 
-  if (filters?.paperTrading !== undefined) {
-    query = query.eq('paper_trading', filters.paperTrading);
-  }
+      return await query
+        .order('created_at', { ascending: false })
+        .limit(limit);
+    }
+  );
 
-  const { data, error } = await query
-    .order('created_at', { ascending: false })
-    .limit(limit);
-
-  if (error) {
-    console.error('Error fetching user orders:', error);
+  if (result.error) {
+    console.error('Error fetching user orders:', result.error);
     return [];
   }
 
-  return data || [];
+  return result.data || [];
+}
+
+export async function getUserOrdersPaginated(
+  userId: string,
+  params: PaginationParams,
+  filters?: {
+    status?: OrderStatus;
+    module?: string;
+    marketId?: string;
+  }
+): Promise<PaginatedResult<Order>> {
+  return queryOptimizer.getOrdersPaginated(userId, params, filters);
 }
 
 export async function getOpenOrders(userId: string, moduleType?: string): Promise<Order[]> {
-  let query = supabase
-    .from('orders')
-    .select('*')
-    .eq('user_id', userId)
-    .in('status', ['OPEN', 'PARTIALLY_FILLED', 'SUBMITTED']);
+  const result = await queryOptimizer.measureQuery(
+    'getOpenOrders',
+    async () => {
+      let query = supabase
+        .from('orders')
+        .select('*')
+        .eq('user_id', userId)
+        .in('status', ['pending', 'partially_filled']);
 
-  if (moduleType) {
-    query = query.eq('module_type', moduleType);
-  }
+      if (moduleType) {
+        query = query.eq('module', moduleType);
+      }
 
-  const { data, error } = await query.order('created_at', { ascending: false });
+      return await query.order('created_at', { ascending: false });
+    }
+  );
 
-  if (error) {
-    console.error('Error fetching open orders:', error);
+  if (result.error) {
+    console.error('Error fetching open orders:', result.error);
     return [];
   }
 
-  return data || [];
+  return result.data || [];
 }
 
 export async function getOrderFills(orderId: string): Promise<OrderFill[]> {
@@ -121,24 +140,31 @@ export async function getOrderSummary(
   dateTo?: Date
 ): Promise<OrderSummary> {
   try {
-    let query = supabase
-      .from('orders')
-      .select('status, size, price, filled_size')
-      .eq('user_id', userId);
+    const result = await queryOptimizer.measureQuery(
+      'getOrderSummary',
+      async () => {
+        let query = supabase
+          .from('orders')
+          .select('status, size, price, filled_size')
+          .eq('user_id', userId);
 
-    if (moduleType) {
-      query = query.eq('module_type', moduleType);
-    }
+        if (moduleType) {
+          query = query.eq('module', moduleType);
+        }
 
-    if (dateFrom) {
-      query = query.gte('created_at', dateFrom.toISOString());
-    }
+        if (dateFrom) {
+          query = query.gte('created_at', dateFrom.toISOString());
+        }
 
-    if (dateTo) {
-      query = query.lte('created_at', dateTo.toISOString());
-    }
+        if (dateTo) {
+          query = query.lte('created_at', dateTo.toISOString());
+        }
 
-    const { data: orders, error } = await query;
+        return await query;
+      }
+    );
+
+    const { data: orders, error } = result;
 
     if (error) throw error;
 

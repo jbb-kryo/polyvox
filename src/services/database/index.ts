@@ -5,3 +5,5 @@ export * from './whaleDb';
 export * from './valueDb';
 export * from './analyticsDb';
 export * from './ordersDb';
+export * from './queryOptimizer';
+export * from './performanceMonitor';
