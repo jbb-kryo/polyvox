@@ -3,6 +3,9 @@ import { Search, RefreshCw, TrendingUp, Filter, AlertCircle, ChevronLeft, Chevro
 import { PolymarketMarket, MarketFilters } from '../types';
 import { fetchMarkets, formatVolume, formatSpread } from '../services/polymarket';
 import toast from 'react-hot-toast';
+import { TableSkeleton } from './Skeletons';
+import { ErrorDisplay, InlineError } from './ErrorDisplay';
+import { isNetworkError } from '../services/connectionStatus';
 
 interface MarketBrowserProps {
   paperTradingMode: boolean;
@@ -172,40 +175,23 @@ export default function MarketBrowser({ paperTradingMode, useCorsProxy }: Market
 
   if (isLoading) {
     return (
-      <div className="space-y-4">
+      <div className="space-y-6">
         <div className="bg-gray-800 border border-gray-700 rounded-lg p-6">
-          <div className="animate-pulse space-y-4">
-            <div className="h-4 bg-gray-700 rounded w-3/4"></div>
-            <div className="h-4 bg-gray-700 rounded w-1/2"></div>
-            <div className="h-4 bg-gray-700 rounded w-5/6"></div>
-          </div>
-        </div>
-        <div className="bg-gray-800 border border-gray-700 rounded-lg p-6">
-          <div className="animate-pulse space-y-4">
-            <div className="h-4 bg-gray-700 rounded w-2/3"></div>
-            <div className="h-4 bg-gray-700 rounded w-4/5"></div>
-            <div className="h-4 bg-gray-700 rounded w-1/2"></div>
-          </div>
+          <TableSkeleton rows={10} columns={5} />
         </div>
       </div>
     );
   }
 
   if (error) {
+    const isNetwork = isNetworkError(error);
     return (
-      <div className="bg-red-900 bg-opacity-20 border border-red-700 rounded-lg p-6">
-        <div className="flex items-center gap-3 mb-4">
-          <AlertCircle className="w-6 h-6 text-red-400" />
-          <h3 className="text-lg font-semibold text-red-400">Error Loading Markets</h3>
-        </div>
-        <p className="text-red-300 mb-4">{error}</p>
-        <button
-          onClick={loadMarkets}
-          className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
-        >
-          Retry
-        </button>
-      </div>
+      <ErrorDisplay
+        title={isNetwork ? 'Connection Error' : 'Error Loading Markets'}
+        message={isNetwork ? 'Unable to fetch markets. Please check your connection and try again.' : error}
+        type={isNetwork ? 'offline' : 'error'}
+        onRetry={() => loadMarkets()}
+      />
     );
   }
 

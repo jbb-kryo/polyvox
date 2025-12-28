@@ -46,6 +46,8 @@ import PositionsOverview from './components/PositionsOverview';
 import PositionHistoryView from './components/PositionHistoryView';
 import RiskLimitsManager from './components/RiskLimitsManager';
 import { NotificationCenter } from './components/NotificationCenter';
+import { ErrorBoundary } from './components/ErrorBoundary';
+import { OfflineBanner } from './components/ConnectionStatus';
 import { fetchMarkets } from './services/polymarket';
 import { fetchPlatformMetrics, formatCurrency, PlatformMetrics } from './services/platformMetrics';
 import { getAllModuleSettings } from './services/database/moduleSettings';
@@ -390,6 +392,7 @@ function App() {
         }}
       />
 
+      <OfflineBanner />
       <PaperTradingBanner isPaperTrading={settings.paperTradingMode} />
 
       <nav className="bg-gray-800 border-b border-gray-700 sticky top-0 z-40">
@@ -661,7 +664,9 @@ function App() {
 
         <main className="flex-1 overflow-y-auto flex flex-col">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1">
-            {renderContent()}
+            <ErrorBoundary>
+              {renderContent()}
+            </ErrorBoundary>
           </div>
           <Footer />
         </main>
