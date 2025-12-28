@@ -560,18 +560,37 @@ if (chainId !== 137) {
 
 ## Integration with Existing Code
 
-The new wallet system is designed to work alongside the existing `WalletConnection` component:
+The new wallet system is fully integrated throughout the application:
 
 ```typescript
-// Old component (still works)
-import WalletConnection from './components/WalletConnection';
+// Settings modal wallet setup (integrated)
+import WalletSetupModal from './components/WalletSetupModal';
 
-// New component (new features)
+// Standalone wallet connection manager
 import WalletConnectionManager from './components/WalletConnectionManager';
+
+// Legacy component (still works)
+import WalletConnection from './components/WalletConnection';
 
 // Demo component
 import { WalletProviderDemo } from './components/WalletProviderDemo';
 ```
+
+### WalletSetupModal Updates
+
+The `WalletSetupModal` accessed from Settings has been updated with full MetaMask and WalletConnect integration:
+
+**Features:**
+- Three connection methods: MetaMask, WalletConnect, Private Key
+- MetaMask detection with install prompts
+- WalletConnect QR code integration
+- Automatic paper trading mode disabling on connection
+- Beautiful UI with connection method selection
+
+**Access:**
+1. Click Settings in the app header
+2. Select "Configure Secure Wallet"
+3. Choose your preferred connection method
 
 ## Best Practices Summary
 

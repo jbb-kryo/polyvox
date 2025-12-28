@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { X, Wallet, Lock, AlertTriangle, Eye, EyeOff, ExternalLink } from 'lucide-react';
+import { X, Wallet, Lock, AlertTriangle, Eye, EyeOff, ExternalLink, Link } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { useWalletProviders } from '../hooks/useWalletProviders';
 import { ethers } from 'ethers';
 import toast from 'react-hot-toast';
 
@@ -9,10 +10,10 @@ interface WalletSetupModalProps {
   onClose: () => void;
 }
 
-type WalletMode = 'private-key' | 'metamask';
+type WalletMode = 'private-key' | 'metamask' | 'walletconnect';
 
 export default function WalletSetupModal({ isOpen, onClose }: WalletSetupModalProps) {
-  const [mode, setMode] = useState<WalletMode>('private-key');
+  const [mode, setMode] = useState<WalletMode>('metamask');
   const [privateKey, setPrivateKey] = useState('');
   const [masterPassword, setMasterPassword] = useState('');
   const [confirmMasterPassword, setConfirmMasterPassword] = useState('');
@@ -22,6 +23,7 @@ export default function WalletSetupModal({ isOpen, onClose }: WalletSetupModalPr
   const [acceptedWarning, setAcceptedWarning] = useState(false);
 
   const { setWalletCredentials, updateProfile } = useAuth();
+  const { connectMetaMask, connectWalletConnect, isConnecting } = useWalletProviders();
 
   if (!isOpen) return null;
 
@@ -101,7 +103,37 @@ export default function WalletSetupModal({ isOpen, onClose }: WalletSetupModalPr
   };
 
   const handleMetaMaskSetup = async () => {
-    toast.error('MetaMask integration coming soon!');
+    setLoading(true);
+    try {
+      await connectMetaMask();
+
+      await updateProfile({ demo_mode: false });
+
+      toast.success('MetaMask wallet connected successfully!');
+      onClose();
+    } catch (error: any) {
+      console.error('Error connecting MetaMask:', error);
+      toast.error(error.message || 'Failed to connect MetaMask');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleWalletConnectSetup = async () => {
+    setLoading(true);
+    try {
+      await connectWalletConnect();
+
+      await updateProfile({ demo_mode: false });
+
+      toast.success('WalletConnect connected successfully!');
+      onClose();
+    } catch (error: any) {
+      console.error('Error connecting WalletConnect:', error);
+      toast.error(error.message || 'Failed to connect WalletConnect');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -134,35 +166,143 @@ export default function WalletSetupModal({ isOpen, onClose }: WalletSetupModalPr
             </div>
           </div>
 
-          <div className="flex gap-4 mb-6">
+          <div className="grid grid-cols-3 gap-3 mb-6">
             <button
-              onClick={() => setMode('private-key')}
-              className={`flex-1 p-4 rounded-lg border-2 transition-all ${
-                mode === 'private-key'
-                  ? 'border-blue-500 bg-blue-500 bg-opacity-10'
+              onClick={() => setMode('metamask')}
+              className={`p-4 rounded-lg border-2 transition-all ${
+                mode === 'metamask'
+                  ? 'border-orange-500 bg-orange-500 bg-opacity-10'
                   : 'border-gray-600 hover:border-gray-500'
               }`}
             >
-              <Lock className="w-6 h-6 text-blue-400 mx-auto mb-2" />
-              <div className="text-white font-medium">Private Key</div>
-              <div className="text-xs text-gray-400 mt-1">Encrypted storage</div>
+              <div className="text-3xl mx-auto mb-2 text-center">🦊</div>
+              <div className="text-white font-medium text-sm text-center">MetaMask</div>
+              <div className="text-xs text-gray-400 mt-1 text-center">Browser extension</div>
             </button>
 
             <button
-              onClick={() => setMode('metamask')}
-              className={`flex-1 p-4 rounded-lg border-2 transition-all ${
-                mode === 'metamask'
+              onClick={() => setMode('walletconnect')}
+              className={`p-4 rounded-lg border-2 transition-all ${
+                mode === 'walletconnect'
                   ? 'border-blue-500 bg-blue-500 bg-opacity-10'
                   : 'border-gray-600 hover:border-gray-500'
               }`}
             >
-              <Wallet className="w-6 h-6 text-orange-400 mx-auto mb-2" />
-              <div className="text-white font-medium">MetaMask</div>
-              <div className="text-xs text-gray-400 mt-1">Coming soon</div>
+              <div className="text-3xl mx-auto mb-2 text-center">🔗</div>
+              <div className="text-white font-medium text-sm text-center">WalletConnect</div>
+              <div className="text-xs text-gray-400 mt-1 text-center">Mobile wallets</div>
+            </button>
+
+            <button
+              onClick={() => setMode('private-key')}
+              className={`p-4 rounded-lg border-2 transition-all ${
+                mode === 'private-key'
+                  ? 'border-gray-400 bg-gray-500 bg-opacity-10'
+                  : 'border-gray-600 hover:border-gray-500'
+              }`}
+            >
+              <Lock className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+              <div className="text-white font-medium text-sm text-center">Private Key</div>
+              <div className="text-xs text-gray-400 mt-1 text-center">Manual import</div>
             </button>
           </div>
 
-          {mode === 'private-key' ? (
+          {mode === 'metamask' ? (
+            <div className="text-center py-8">
+              <div className="text-6xl mb-4">🦊</div>
+              <h3 className="text-xl font-bold text-white mb-2">Connect MetaMask</h3>
+              <p className="text-gray-400 mb-6 max-w-md mx-auto">
+                Connect your MetaMask browser extension to start trading on Polymarket with enhanced security.
+              </p>
+
+              <div className="bg-blue-500 bg-opacity-10 border border-blue-500 rounded-lg p-4 mb-6 max-w-md mx-auto">
+                <h4 className="text-sm font-semibold text-blue-400 mb-2">What is MetaMask?</h4>
+                <ul className="text-xs text-blue-200 text-left space-y-1">
+                  <li>• Popular Ethereum/Polygon wallet browser extension</li>
+                  <li>• Secure transaction signing without exposing keys</li>
+                  <li>• Works on Chrome, Firefox, Brave, and Edge</li>
+                  <li>• Free to download and use</li>
+                </ul>
+              </div>
+
+              {!window.ethereum ? (
+                <div className="space-y-4">
+                  <div className="bg-yellow-500 bg-opacity-10 border border-yellow-500 rounded-lg p-4 max-w-md mx-auto">
+                    <p className="text-sm text-yellow-200">
+                      MetaMask not detected. Please install MetaMask to continue.
+                    </p>
+                  </div>
+                  <a
+                    href="https://metamask.io/download/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white font-medium rounded-lg transition-colors"
+                  >
+                    <ExternalLink className="w-5 h-5" />
+                    Download MetaMask
+                  </a>
+                </div>
+              ) : (
+                <button
+                  onClick={handleMetaMaskSetup}
+                  disabled={loading || isConnecting}
+                  className="px-8 py-3 bg-orange-600 hover:bg-orange-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors inline-flex items-center gap-2"
+                >
+                  <Wallet className="w-5 h-5" />
+                  {loading || isConnecting ? 'Connecting...' : 'Connect MetaMask'}
+                </button>
+              )}
+
+              <div className="pt-6 border-t border-gray-700 mt-6 max-w-md mx-auto">
+                <h4 className="text-sm font-semibold text-white mb-2">Benefits:</h4>
+                <ul className="space-y-1 text-xs text-gray-400 text-left">
+                  <li>• No need to enter private keys</li>
+                  <li>• Sign transactions directly in MetaMask</li>
+                  <li>• Automatic network switching</li>
+                  <li>• Account switching detection</li>
+                  <li>• Hardware wallet support</li>
+                </ul>
+              </div>
+            </div>
+          ) : mode === 'walletconnect' ? (
+            <div className="text-center py-8">
+              <div className="text-6xl mb-4">🔗</div>
+              <h3 className="text-xl font-bold text-white mb-2">Connect with WalletConnect</h3>
+              <p className="text-gray-400 mb-6 max-w-md mx-auto">
+                Connect your mobile wallet by scanning a QR code. Works with Trust Wallet, Rainbow, and 100+ other wallets.
+              </p>
+
+              <div className="bg-blue-500 bg-opacity-10 border border-blue-500 rounded-lg p-4 mb-6 max-w-md mx-auto">
+                <h4 className="text-sm font-semibold text-blue-400 mb-2">How it works:</h4>
+                <ul className="text-xs text-blue-200 text-left space-y-1">
+                  <li>• Click the button below to show QR code</li>
+                  <li>• Open your mobile wallet app</li>
+                  <li>• Scan the QR code with your wallet</li>
+                  <li>• Approve the connection on your phone</li>
+                </ul>
+              </div>
+
+              <button
+                onClick={handleWalletConnectSetup}
+                disabled={loading || isConnecting}
+                className="px-8 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors inline-flex items-center gap-2"
+              >
+                <Link className="w-5 h-5" />
+                {loading || isConnecting ? 'Connecting...' : 'Show QR Code'}
+              </button>
+
+              <div className="pt-6 border-t border-gray-700 mt-6 max-w-md mx-auto">
+                <h4 className="text-sm font-semibold text-white mb-2">Compatible Wallets:</h4>
+                <div className="flex flex-wrap gap-2 justify-center text-xs text-gray-400">
+                  <span className="px-3 py-1 bg-gray-700 rounded-full">Trust Wallet</span>
+                  <span className="px-3 py-1 bg-gray-700 rounded-full">Rainbow</span>
+                  <span className="px-3 py-1 bg-gray-700 rounded-full">Coinbase Wallet</span>
+                  <span className="px-3 py-1 bg-gray-700 rounded-full">Argent</span>
+                  <span className="px-3 py-1 bg-gray-700 rounded-full">+100 more</span>
+                </div>
+              </div>
+            </div>
+          ) : (
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -275,21 +415,6 @@ export default function WalletSetupModal({ isOpen, onClose }: WalletSetupModalPr
                   <li>• Keys are only decrypted on-demand for trading</li>
                 </ul>
               </div>
-            </div>
-          ) : (
-            <div className="text-center py-12">
-              <Wallet className="w-16 h-16 text-orange-400 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-white mb-2">MetaMask Integration</h3>
-              <p className="text-gray-400 mb-6">
-                Connect your MetaMask wallet for a more secure trading experience. This feature is coming soon.
-              </p>
-              <button
-                onClick={handleMetaMaskSetup}
-                disabled
-                className="px-6 py-3 bg-orange-600 hover:bg-orange-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors"
-              >
-                Connect MetaMask
-              </button>
             </div>
           )}
         </div>
