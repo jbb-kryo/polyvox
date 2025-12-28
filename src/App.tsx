@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { Toaster } from 'react-hot-toast';
 import {
   Home,
@@ -31,28 +31,30 @@ import LiveTradingWarningModal from './components/LiveTradingWarningModal';
 import BalanceWidget from './components/BalanceWidget';
 import DashboardHome from './components/DashboardHome';
 import ModuleCard from './components/ModuleCard';
-import MarketBrowser from './components/MarketBrowser';
-import ArbitrageHunter from './components/ArbitrageHunter';
-import TrendRider from './components/TrendRider';
-import SnipeMaster from './components/SnipeMaster';
-import WhaleWatcher from './components/WhaleWatcher';
-import ValueMiner from './components/ValueMiner';
-import Analytics from './components/Analytics';
-import Documentation from './components/Documentation';
 import Footer from './components/Footer';
 import BackgroundScanStatus from './components/BackgroundScanStatus';
 import EmergencyStopButton from './components/EmergencyStopButton';
-import PositionsOverview from './components/PositionsOverview';
-import PositionHistoryView from './components/PositionHistoryView';
-import RiskLimitsManager from './components/RiskLimitsManager';
 import { NotificationCenter } from './components/NotificationCenter';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { OfflineBanner } from './components/ConnectionStatus';
+import { ComponentLoadingFallback } from './components/LoadingSpinner';
 import { fetchMarkets } from './services/polymarket';
 import { fetchPlatformMetrics, formatCurrency, PlatformMetrics } from './services/platformMetrics';
 import { getAllModuleSettings } from './services/database/moduleSettings';
 import { backgroundScanner } from './services/backgroundScanner';
 import { autoExecutor } from './services/autoExecutor';
+
+const MarketBrowser = lazy(() => import('./components/MarketBrowser'));
+const ArbitrageHunter = lazy(() => import('./components/ArbitrageHunter'));
+const TrendRider = lazy(() => import('./components/TrendRider'));
+const SnipeMaster = lazy(() => import('./components/SnipeMaster'));
+const WhaleWatcher = lazy(() => import('./components/WhaleWatcher'));
+const ValueMiner = lazy(() => import('./components/ValueMiner'));
+const Analytics = lazy(() => import('./components/Analytics'));
+const Documentation = lazy(() => import('./components/Documentation'));
+const PositionsOverview = lazy(() => import('./components/PositionsOverview'));
+const PositionHistoryView = lazy(() => import('./components/PositionHistoryView'));
+const RiskLimitsManager = lazy(() => import('./components/RiskLimitsManager'));
 
 type View = 'dashboard' | 'modules' | 'analytics' | 'markets' | 'positions' | 'history' | 'risk-limits' | 'arbitrage-hunter' | 'trendrider' | 'snipe-master' | 'whale-watcher' | 'value-miner' | 'docs';
 
@@ -276,7 +278,9 @@ function App() {
         return (
           <div>
             <h1 className="text-2xl font-bold text-white mb-6">Market Browser</h1>
-            <MarketBrowser paperTradingMode={settings.paperTradingMode} useCorsProxy={settings.useCorsProxy} />
+            <Suspense fallback={<ComponentLoadingFallback name="Market Browser" />}>
+              <MarketBrowser paperTradingMode={settings.paperTradingMode} useCorsProxy={settings.useCorsProxy} />
+            </Suspense>
           </div>
         );
       case 'modules':
@@ -295,66 +299,96 @@ function App() {
           </div>
         );
       case 'analytics':
-        return <Analytics />;
+        return (
+          <Suspense fallback={<ComponentLoadingFallback name="Analytics" />}>
+            <Analytics />
+          </Suspense>
+        );
       case 'positions':
-        return <PositionsOverview />;
+        return (
+          <Suspense fallback={<ComponentLoadingFallback name="Positions" />}>
+            <PositionsOverview />
+          </Suspense>
+        );
       case 'history':
-        return <PositionHistoryView />;
+        return (
+          <Suspense fallback={<ComponentLoadingFallback name="History" />}>
+            <PositionHistoryView />
+          </Suspense>
+        );
       case 'risk-limits':
-        return <RiskLimitsManager />;
+        return (
+          <Suspense fallback={<ComponentLoadingFallback name="Risk Limits" />}>
+            <RiskLimitsManager />
+          </Suspense>
+        );
       case 'docs':
         return (
           <div>
             <h1 className="text-2xl font-bold text-white mb-6">Documentation</h1>
-            <Documentation />
+            <Suspense fallback={<ComponentLoadingFallback name="Documentation" />}>
+              <Documentation />
+            </Suspense>
           </div>
         );
       case 'arbitrage-hunter':
         return (
           <div>
             <h1 className="text-2xl font-bold text-white mb-6">ArbitrageHunter Bot</h1>
-            <ArbitrageHunter
-              paperTradingMode={settings.paperTradingMode}
-              useCorsProxy={settings.useCorsProxy}
-              walletAddress={settings.walletAddress}
-              walletPrivateKey={settings.walletPrivateKey}
-            />
+            <Suspense fallback={<ComponentLoadingFallback name="ArbitrageHunter" />}>
+              <ArbitrageHunter
+                paperTradingMode={settings.paperTradingMode}
+                useCorsProxy={settings.useCorsProxy}
+                walletAddress={settings.walletAddress}
+                walletPrivateKey={settings.walletPrivateKey}
+              />
+            </Suspense>
           </div>
         );
       case 'trendrider':
         return (
           <div>
             <h1 className="text-2xl font-bold text-white mb-6">TrendRider Bot</h1>
-            <TrendRider
-              paperTradingMode={settings.paperTradingMode}
-              useCorsProxy={settings.useCorsProxy}
-              walletAddress={settings.walletAddress}
-              walletPrivateKey={settings.walletPrivateKey}
-            />
+            <Suspense fallback={<ComponentLoadingFallback name="TrendRider" />}>
+              <TrendRider
+                paperTradingMode={settings.paperTradingMode}
+                useCorsProxy={settings.useCorsProxy}
+                walletAddress={settings.walletAddress}
+                walletPrivateKey={settings.walletPrivateKey}
+              />
+            </Suspense>
           </div>
         );
       case 'snipe-master':
         return (
           <div>
             <h1 className="text-2xl font-bold text-white mb-6">SnipeMaster Bot</h1>
-            <SnipeMaster
-              paperTradingMode={settings.paperTradingMode}
-              useCorsProxy={settings.useCorsProxy}
-              walletAddress={settings.walletAddress}
-              walletPrivateKey={settings.walletPrivateKey}
-            />
+            <Suspense fallback={<ComponentLoadingFallback name="SnipeMaster" />}>
+              <SnipeMaster
+                paperTradingMode={settings.paperTradingMode}
+                useCorsProxy={settings.useCorsProxy}
+                walletAddress={settings.walletAddress}
+                walletPrivateKey={settings.walletPrivateKey}
+              />
+            </Suspense>
           </div>
         );
       case 'whale-watcher':
-        return <WhaleWatcher />;
+        return (
+          <Suspense fallback={<ComponentLoadingFallback name="WhaleWatcher" />}>
+            <WhaleWatcher />
+          </Suspense>
+        );
       case 'value-miner':
         return (
           <div>
             <h1 className="text-2xl font-bold text-white mb-6">ValueMiner Bot</h1>
-            <ValueMiner
-              paperTradingMode={settings.paperTradingMode}
-              walletAddress={settings.walletAddress}
-            />
+            <Suspense fallback={<ComponentLoadingFallback name="ValueMiner" />}>
+              <ValueMiner
+                paperTradingMode={settings.paperTradingMode}
+                walletAddress={settings.walletAddress}
+              />
+            </Suspense>
           </div>
         );
       default:

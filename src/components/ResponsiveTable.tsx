@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 interface ResponsiveTableProps {
   children: React.ReactNode;
   className?: string;
 }
 
-export function ResponsiveTable({ children, className = '' }: ResponsiveTableProps) {
+export const ResponsiveTable = memo(function ResponsiveTable({ children, className = '' }: ResponsiveTableProps) {
   return (
     <div className="w-full overflow-x-auto -mx-4 sm:mx-0">
       <div className="inline-block min-w-full align-middle px-4 sm:px-0">
@@ -15,14 +15,14 @@ export function ResponsiveTable({ children, className = '' }: ResponsiveTablePro
       </div>
     </div>
   );
-}
+});
 
 interface ResponsiveTableWrapperProps {
   children: React.ReactNode;
   minWidth?: string;
 }
 
-export function ResponsiveTableWrapper({ children, minWidth = '800px' }: ResponsiveTableWrapperProps) {
+export const ResponsiveTableWrapper = memo(function ResponsiveTableWrapper({ children, minWidth = '800px' }: ResponsiveTableWrapperProps) {
   return (
     <div className="w-full overflow-x-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-800">
       <div style={{ minWidth }} className="w-full">
@@ -30,7 +30,7 @@ export function ResponsiveTableWrapper({ children, minWidth = '800px' }: Respons
       </div>
     </div>
   );
-}
+});
 
 interface MobileCardProps {
   data: Record<string, any>;
@@ -42,7 +42,7 @@ interface MobileCardProps {
   onClick?: () => void;
 }
 
-export function MobileCard({ data, fields, onClick }: MobileCardProps) {
+export const MobileCard = memo(function MobileCard({ data, fields, onClick }: MobileCardProps) {
   return (
     <div
       onClick={onClick}
@@ -60,7 +60,7 @@ export function MobileCard({ data, fields, onClick }: MobileCardProps) {
       ))}
     </div>
   );
-}
+});
 
 interface ResponsiveViewProps {
   data: any[];
