@@ -20,10 +20,13 @@ const RPC_ENDPOINTS = [
   'https://rpc-mainnet.matic.network',
   'https://polygon-mainnet.public.blastapi.io',
   'https://rpc-mainnet.maticvigil.com',
-  'https://polygon-bor.publicnode.com'
+  'https://polygon-bor.publicnode.com',
+  'https://polygon.llamarpc.com',
+  'https://1rpc.io/matic'
 ];
 
 let currentRpcIndex = 0;
+const failedRpcEndpoints = new Set<number>();
 
 export type ConnectionType = 'rpc' | 'injected';
 export type ConnectionStatus = 'connected' | 'disconnected' | 'connecting' | 'error' | 'wrong_network';
@@ -63,45 +66,63 @@ class Web3ProviderService {
   async connectWithRPC(): Promise<Web3Connection> {
     this.updateStatus('connecting');
 
-    try {
-      const provider = await this.createRpcProvider();
-      const network = await provider.getNetwork();
+    const maxAttempts = RPC_ENDPOINTS.length;
+    let attempts = 0;
 
-      if (Number(network.chainId) !== POLYGON_CHAIN_ID) {
-        throw new Error('RPC endpoint returned wrong network');
+    while (attempts < maxAttempts) {
+      if (failedRpcEndpoints.has(currentRpcIndex)) {
+        currentRpcIndex = (currentRpcIndex + 1) % RPC_ENDPOINTS.length;
+        attempts++;
+        continue;
       }
 
-      this.connection = {
-        provider,
-        type: 'rpc',
-        chainId: Number(network.chainId),
-        status: 'connected'
-      };
+      try {
+        const provider = await this.createRpcProvider();
+        const network = await provider.getNetwork();
 
-      this.reconnectAttempts = 0;
-      this.notifyListeners();
-      return this.connection;
+        if (Number(network.chainId) !== POLYGON_CHAIN_ID) {
+          throw new Error(`RPC endpoint returned wrong network: ${network.chainId}`);
+        }
 
-    } catch (error) {
-      console.error('RPC connection failed:', error);
+        await provider.getBlockNumber();
 
-      if (currentRpcIndex < RPC_ENDPOINTS.length - 1) {
-        currentRpcIndex++;
-        console.log(`Trying next RPC endpoint: ${RPC_ENDPOINTS[currentRpcIndex]}`);
-        return this.connectWithRPC();
+        failedRpcEndpoints.delete(currentRpcIndex);
+
+        this.connection = {
+          provider,
+          type: 'rpc',
+          chainId: Number(network.chainId),
+          status: 'connected'
+        };
+
+        this.reconnectAttempts = 0;
+        this.notifyListeners();
+        return this.connection;
+
+      } catch (error) {
+        console.error(`RPC connection failed for ${RPC_ENDPOINTS[currentRpcIndex]}:`, error);
+        failedRpcEndpoints.add(currentRpcIndex);
+
+        attempts++;
+        if (attempts < maxAttempts) {
+          currentRpcIndex = (currentRpcIndex + 1) % RPC_ENDPOINTS.length;
+          console.log(`Trying next RPC endpoint: ${RPC_ENDPOINTS[currentRpcIndex]}`);
+          await new Promise(resolve => setTimeout(resolve, 500));
+        }
       }
-
-      this.connection = {
-        provider: new ethers.JsonRpcProvider(RPC_ENDPOINTS[0]),
-        type: 'rpc',
-        chainId: 0,
-        status: 'error',
-        error: error instanceof Error ? error.message : 'Connection failed'
-      };
-
-      this.notifyListeners();
-      throw error;
     }
+
+    const errorMsg = 'All RPC endpoints failed. Please check your internet connection.';
+    this.connection = {
+      provider: new ethers.JsonRpcProvider(RPC_ENDPOINTS[0]),
+      type: 'rpc',
+      chainId: 0,
+      status: 'error',
+      error: errorMsg
+    };
+
+    this.notifyListeners();
+    throw new Error(errorMsg);
   }
 
   async connectWithInjectedWallet(): Promise<Web3Connection> {
@@ -208,9 +229,19 @@ class Web3ProviderService {
 
   private async createRpcProvider(): Promise<ethers.JsonRpcProvider> {
     const rpcUrl = RPC_ENDPOINTS[currentRpcIndex];
-    const provider = new ethers.JsonRpcProvider(rpcUrl);
+    const provider = new ethers.JsonRpcProvider(rpcUrl, undefined, {
+      staticNetwork: ethers.Network.from(POLYGON_CHAIN_ID),
+      batchMaxCount: 1
+    });
 
-    await provider.getBlockNumber();
+    const timeout = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error('RPC connection timeout')), 10000)
+    );
+
+    await Promise.race([
+      provider.getBlockNumber(),
+      timeout
+    ]);
 
     return provider;
   }
@@ -456,6 +487,61 @@ class Web3ProviderService {
   cleanup(): void {
     this.listeners.clear();
     this.connection = null;
+  }
+
+  async healthCheck(): Promise<{
+    isHealthy: boolean;
+    latency?: number;
+    blockNumber?: number;
+    error?: string;
+  }> {
+    const provider = this.getProvider();
+    if (!provider) {
+      return { isHealthy: false, error: 'No provider available' };
+    }
+
+    try {
+      const startTime = Date.now();
+      const blockNumber = await provider.getBlockNumber();
+      const latency = Date.now() - startTime;
+
+      return {
+        isHealthy: true,
+        latency,
+        blockNumber
+      };
+    } catch (error) {
+      return {
+        isHealthy: false,
+        error: error instanceof Error ? error.message : 'Health check failed'
+      };
+    }
+  }
+
+  async ensureConnection(): Promise<void> {
+    if (!this.isConnected()) {
+      const isValid = await this.verifyNetwork();
+      if (!isValid) {
+        if (this.connection?.type === 'injected' && window.ethereum) {
+          await this.connectWithInjectedWallet();
+        } else {
+          await this.connectWithRPC();
+        }
+      }
+    }
+  }
+
+  getRpcEndpoint(): string {
+    return RPC_ENDPOINTS[currentRpcIndex];
+  }
+
+  getAvailableRpcEndpoints(): string[] {
+    return RPC_ENDPOINTS.filter((_, index) => !failedRpcEndpoints.has(index));
+  }
+
+  resetRpcFailures(): void {
+    failedRpcEndpoints.clear();
+    currentRpcIndex = 0;
   }
 }
 
