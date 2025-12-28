@@ -335,12 +335,12 @@ This document outlines all remaining tasks to make PolyVOX fully functional, liv
 **Prompt:** "Implement proper Polygon network connection using ethers.js. Support both RPC and user's injected wallet (MetaMask). Handle network switching and errors."
 
 **Acceptance Criteria:**
-- [ ] Polygon mainnet connection
-- [ ] RPC fallback endpoints
-- [ ] Network auto-switching
-- [ ] Connection status indicator
-- [ ] Gas price estimation
-- [ ] Transaction confirmation waiting
+- [X] Polygon mainnet connection
+- [X] RPC fallback endpoints
+- [X] Network auto-switching
+- [X] Connection status indicator
+- [X] Gas price estimation
+- [X] Transaction confirmation waiting
 
 **Files to Update:**
 - `src/services/polymarketTrading.ts`
