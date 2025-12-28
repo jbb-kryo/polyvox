@@ -60,7 +60,8 @@ Implements value betting strategies with edge calculation and Kelly Criterion si
 - **Trade History**: Complete audit trail of all executed trades
 - **Risk Controls**: Configurable limits and safeguards
 - **Wallet Integration**: Secure wallet connection via ethers.js
-- **Demo Mode**: Test strategies without real capital
+- **Paper Trading Mode**: Test strategies with real market data without spending money
+- **Comprehensive Testing**: Built-in test suite to verify paper trading functionality
 
 ## Technology Stack
 
@@ -294,6 +295,63 @@ The application includes optimizations to improve viral potential:
 - Professional branding and visual appeal
 
 For a comprehensive guide on launching and promoting PolyVOX, see [SEO_GUIDE.md](SEO_GUIDE.md).
+
+## Testing
+
+### Paper Trading Mode
+
+PolyVOX includes a comprehensive paper trading mode that allows you to practice trading strategies using **real market data** without spending any money.
+
+**Key Features:**
+- Real-time market data from Polymarket
+- Simulated order execution (no blockchain transactions)
+- Accurate P&L calculations using live prices
+- Complete position tracking
+- Zero financial risk
+
+**How to Use:**
+1. Go to Settings
+2. Enable "Paper Trading Mode" toggle
+3. Save settings
+4. Trade normally - all orders will be simulated
+
+### Test Suite
+
+A built-in test suite validates paper trading functionality:
+
+**Access the Test Suite:**
+1. Navigate to Documentation → Paper Trading Test
+2. Click "Run All Tests"
+3. Review results (expect 100% pass rate)
+
+**What's Tested:**
+- ✓ Market data access with real Polymarket data
+- ✓ Real-time data updates
+- ✓ Paper order creation without blockchain interaction
+- ✓ Order simulation and fills
+- ✓ No actual transactions verification
+- ✓ P&L calculation accuracy (<$0.01 error)
+- ✓ Position tracking functionality
+- ✓ Mode switching between paper/live
+
+**Documentation:**
+- [PAPER_TRADING_TEST_RESULTS.md](PAPER_TRADING_TEST_RESULTS.md) - Detailed test results
+- [PAPER_TRADING_ACCEPTANCE_CRITERIA.md](PAPER_TRADING_ACCEPTANCE_CRITERIA.md) - Acceptance criteria
+- [PAPER_TRADING_SUMMARY.md](PAPER_TRADING_SUMMARY.md) - Implementation overview
+
+### Testing Before Live Trading
+
+**Recommended Process:**
+1. Practice in paper mode for at least 1 week
+2. Test all modules you plan to use
+3. Verify P&L calculations match expectations
+4. Understand fee impact (~2% on Polymarket)
+5. Start with small positions in live mode
+
+**Important Notes:**
+- Paper mode has zero fees (real trading ~2%)
+- Paper orders always fill at limit price (real orders may not)
+- Large orders may have different outcomes in live trading
 
 ## Security
 

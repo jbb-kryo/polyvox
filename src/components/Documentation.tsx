@@ -12,8 +12,10 @@ import {
   ArrowRight,
   Coins,
   BarChart3,
-  Info
+  Info,
+  TestTube
 } from 'lucide-react';
+import PaperTradingTest from './PaperTradingTest';
 
 export default function Documentation() {
   const [activeSection, setActiveSection] = useState('getting-started');
@@ -24,6 +26,7 @@ export default function Documentation() {
     { id: 'strategies', label: 'Strategies & Scenarios', icon: Target },
     { id: 'scaling', label: 'Scaling Your Capital', icon: TrendingUp },
     { id: 'risk-management', label: 'Risk Management', icon: Shield },
+    { id: 'paper-trading-test', label: 'Paper Trading Test', icon: TestTube },
     { id: 'faq', label: 'FAQ & Tips', icon: Info }
   ];
 
@@ -620,6 +623,19 @@ export default function Documentation() {
                 </div>
               </div>
             </div>
+          </div>
+        );
+
+      case 'paper-trading-test':
+        return (
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-3xl font-bold text-white mb-4">Paper Trading Test Suite</h2>
+              <p className="text-slate-300 mb-6">
+                Run comprehensive tests to verify paper trading mode is working correctly with real market data.
+              </p>
+            </div>
+            <PaperTradingTest />
           </div>
         );
 
