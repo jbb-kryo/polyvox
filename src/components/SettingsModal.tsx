@@ -32,13 +32,14 @@ export default function SettingsModal({ isOpen, onClose, settings, onSave, onReq
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between p-6 border-b border-gray-700">
-          <h2 className="text-xl font-bold text-white">Global Settings</h2>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
+      <div className="bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
+        <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-700 sticky top-0 bg-gray-800 z-10">
+          <h2 className="text-lg sm:text-xl font-bold text-white">Global Settings</h2>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
+            className="p-2 hover:bg-gray-700 active:bg-gray-600 rounded-lg transition-colors touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center"
+            aria-label="Close"
           >
             <X className="w-5 h-5 text-gray-400" />
           </button>
@@ -342,16 +343,16 @@ export default function SettingsModal({ isOpen, onClose, settings, onSave, onReq
           </div>
         </div>
 
-        <div className="flex items-center justify-end gap-3 p-6 border-t border-gray-700">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3 p-4 sm:p-6 border-t border-gray-700 sticky bottom-0 bg-gray-800">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-gray-300 hover:bg-gray-700 rounded-lg transition-colors"
+            className="px-4 py-3 text-gray-300 hover:bg-gray-700 active:bg-gray-600 rounded-lg transition-colors touch-manipulation min-h-[48px] text-sm sm:text-base"
           >
             Cancel
           </button>
           <button
             onClick={handleSave}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium"
+            className="px-4 py-3 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-lg transition-colors font-medium touch-manipulation min-h-[48px] text-sm sm:text-base"
           >
             Save Settings
           </button>

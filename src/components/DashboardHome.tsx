@@ -41,40 +41,40 @@ export default function DashboardHome({ modules, topMarkets, onViewAllMarkets, o
 
   return (
     <div className="space-y-6">
-      <div className="bg-gray-800 border border-gray-700 rounded-lg p-4">
-        <div className="flex items-center justify-between flex-wrap gap-4">
-          <div className="flex items-center gap-4">
+      <div className="bg-gray-800 border border-gray-700 rounded-lg p-3 sm:p-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 w-full sm:w-auto">
             <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4 text-gray-400" />
-              <span className="text-sm text-gray-400">
-                Last updated: {formatLastRefresh()}
+              <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400" />
+              <span className="text-xs sm:text-sm text-gray-400">
+                Last: {formatLastRefresh()}
               </span>
             </div>
 
             {error && (
               <div className="flex items-center gap-2 text-red-400">
-                <XCircle className="w-4 h-4" />
-                <span className="text-sm">{error}</span>
+                <XCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <span className="text-xs sm:text-sm">{error}</span>
               </div>
             )}
           </div>
 
-          <div className="flex items-center gap-3">
-            <label className="flex items-center gap-2 cursor-pointer">
+          <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
+            <label className="flex items-center gap-2 cursor-pointer touch-manipulation">
               <input
                 type="checkbox"
                 checked={autoRefresh}
                 onChange={(e) => setAutoRefresh(e.target.checked)}
                 className="w-4 h-4 rounded border-gray-600 bg-gray-700 text-blue-600 focus:ring-blue-500 focus:ring-offset-gray-800"
               />
-              <span className="text-sm text-gray-300">Auto-refresh</span>
+              <span className="text-xs sm:text-sm text-gray-300">Auto</span>
             </label>
 
             <select
               value={refreshInterval}
               onChange={(e) => setRefreshInterval(Number(e.target.value))}
               disabled={!autoRefresh}
-              className="text-sm bg-gray-700 border border-gray-600 rounded px-2 py-1 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+              className="text-xs sm:text-sm bg-gray-700 border border-gray-600 rounded px-2 py-1.5 text-white disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation min-h-[36px]"
             >
               <option value={10000}>10s</option>
               <option value={15000}>15s</option>
@@ -85,14 +85,14 @@ export default function DashboardHome({ modules, topMarkets, onViewAllMarkets, o
             <button
               onClick={refresh}
               disabled={isLoading}
-              className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-700 disabled:cursor-not-allowed text-white text-sm rounded transition-colors"
+              className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 disabled:bg-gray-700 disabled:cursor-not-allowed text-white text-xs sm:text-sm rounded transition-colors touch-manipulation min-h-[36px]"
             >
               {isLoading ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
+                <Loader2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 animate-spin" />
               ) : (
-                <RefreshCw className="w-4 h-4" />
+                <RefreshCw className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               )}
-              Refresh
+              <span className="hidden xs:inline">Refresh</span>
             </button>
           </div>
         </div>

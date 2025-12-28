@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 import { TableSkeleton } from './Skeletons';
 import { ErrorDisplay, InlineError } from './ErrorDisplay';
 import { isNetworkError } from '../services/connectionStatus';
+import { ResponsiveTableWrapper } from './ResponsiveTable';
 
 interface MarketBrowserProps {
   paperTradingMode: boolean;
@@ -212,21 +213,21 @@ export default function MarketBrowser({ paperTradingMode, useCorsProxy }: Market
 
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className={`px-4 py-2 rounded-lg transition-colors flex items-center gap-2 ${
-              showFilters ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+            className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg transition-colors flex items-center gap-2 touch-manipulation min-h-[44px] text-sm sm:text-base ${
+              showFilters ? 'bg-blue-600 text-white active:bg-blue-700' : 'bg-gray-700 text-gray-300 hover:bg-gray-600 active:bg-gray-600'
             }`}
           >
-            <Filter className="w-5 h-5" />
-            Filters
+            <Filter className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span className="hidden xs:inline">Filters</span>
           </button>
 
           <button
             onClick={loadMarkets}
             disabled={isLoading}
-            className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50"
+            className="px-3 sm:px-4 py-2 sm:py-2.5 bg-gray-700 hover:bg-gray-600 active:bg-gray-600 text-white rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50 touch-manipulation min-h-[44px] text-sm sm:text-base"
           >
-            <RefreshCw className={`w-5 h-5 ${isLoading ? 'animate-spin' : ''}`} />
-            Refresh
+            <RefreshCw className={`w-4 h-4 sm:w-5 sm:h-5 ${isLoading ? 'animate-spin' : ''}`} />
+            <span className="hidden xs:inline">Refresh</span>
           </button>
         </div>
 
@@ -318,12 +319,12 @@ export default function MarketBrowser({ paperTradingMode, useCorsProxy }: Market
           </div>
         </div>
 
-        <div className="overflow-x-auto">
+        <ResponsiveTableWrapper minWidth="1000px">
           <table className="w-full">
             <thead>
               <tr className="border-b border-gray-700">
-                <th className="text-left py-3 px-4 text-sm font-medium text-gray-400">Market</th>
-                <th className="text-left py-3 px-4 text-sm font-medium text-gray-400">Category</th>
+                <th className="text-left py-3 px-4 text-xs sm:text-sm font-medium text-gray-400">Market</th>
+                <th className="text-left py-3 px-4 text-xs sm:text-sm font-medium text-gray-400 hidden sm:table-cell">Category</th>
                 <th className="text-right py-3 px-4 text-sm font-medium text-gray-400">
                   <button
                     onClick={() => handleSort('volume')}
@@ -376,32 +377,32 @@ export default function MarketBrowser({ paperTradingMode, useCorsProxy }: Market
                   key={market.id}
                   className="border-b border-gray-700 hover:bg-gray-750 transition-colors"
                 >
-                  <td className="py-4 px-4">
-                    <p className="text-white font-medium">{truncateQuestion(market.question)}</p>
+                  <td className="py-3 sm:py-4 px-2 sm:px-4">
+                    <p className="text-white font-medium text-sm sm:text-base">{truncateQuestion(market.question, 40)}</p>
                   </td>
-                  <td className="py-4 px-4">
+                  <td className="py-3 sm:py-4 px-2 sm:px-4 hidden sm:table-cell">
                     <span className="px-2 py-1 bg-gray-700 text-gray-300 rounded text-xs">
                       {market.category}
                     </span>
                   </td>
-                  <td className="py-4 px-4 text-right">
-                    <span className="text-gray-300 font-medium">{formatVolume(market.volume)}</span>
+                  <td className="py-3 sm:py-4 px-2 sm:px-4 text-right">
+                    <span className="text-gray-300 font-medium text-xs sm:text-sm">{formatVolume(market.volume)}</span>
                   </td>
-                  <td className="py-4 px-4 text-right">
-                    <span className="text-gray-300 font-medium">{formatVolume(market.liquidity)}</span>
+                  <td className="py-3 sm:py-4 px-2 sm:px-4 text-right">
+                    <span className="text-gray-300 font-medium text-xs sm:text-sm">{formatVolume(market.liquidity)}</span>
                   </td>
-                  <td className="py-4 px-4 text-right">
+                  <td className="py-3 sm:py-4 px-2 sm:px-4 text-right">
                     <div className="flex flex-col items-end">
-                      <span className="text-green-400 font-bold">
+                      <span className="text-green-400 font-bold text-xs sm:text-sm">
                         ${market.bestBid.toFixed(2)}
                       </span>
-                      <span className="text-xs text-gray-500">
+                      <span className="text-[10px] sm:text-xs text-gray-500">
                         Ask: ${market.bestAsk.toFixed(2)}
                       </span>
                     </div>
                   </td>
-                  <td className="py-4 px-4 text-right">
-                    <span className={`font-medium ${
+                  <td className="py-3 sm:py-4 px-2 sm:px-4 text-right">
+                    <span className={`font-medium text-xs sm:text-sm ${
                       market.spread < 0.03 ? 'text-green-400' :
                       market.spread < 0.05 ? 'text-yellow-400' :
                       'text-red-400'
@@ -413,43 +414,43 @@ export default function MarketBrowser({ paperTradingMode, useCorsProxy }: Market
               ))}
             </tbody>
           </table>
+        </ResponsiveTableWrapper>
 
-          {filteredMarkets.length === 0 && (
-            <div className="text-center py-12">
-              <TrendingUp className="w-12 h-12 text-gray-600 mx-auto mb-3" />
-              <p className="text-gray-400">No markets match your filters</p>
-              <button
-                onClick={() => setFilters({
-                  searchQuery: '',
-                  category: 'All',
-                  minVolume: 0,
-                  maxSpread: 100,
-                  minLiquidity: 0
-                })}
-                className="mt-4 text-blue-400 hover:text-blue-300"
-              >
-                Reset Filters
-              </button>
-            </div>
-          )}
-        </div>
+        {filteredMarkets.length === 0 && (
+          <div className="text-center py-12">
+            <TrendingUp className="w-12 h-12 text-gray-600 mx-auto mb-3" />
+            <p className="text-gray-400">No markets match your filters</p>
+            <button
+              onClick={() => setFilters({
+                searchQuery: '',
+                category: 'All',
+                minVolume: 0,
+                maxSpread: 100,
+                minLiquidity: 0
+              })}
+              className="mt-4 text-blue-400 hover:text-blue-300 touch-manipulation min-h-[44px]"
+            >
+              Reset Filters
+            </button>
+          </div>
+        )}
 
         {hasMore && filteredMarkets.length > 0 && (
           <div className="mt-6 flex justify-center">
             <button
               onClick={loadMoreMarkets}
               disabled={isLoadingMore}
-              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation min-h-[48px] text-sm sm:text-base"
             >
               {isLoadingMore ? (
                 <>
-                  <RefreshCw className="w-5 h-5 animate-spin" />
-                  Loading...
+                  <RefreshCw className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
+                  <span>Loading...</span>
                 </>
               ) : (
                 <>
-                  <ChevronRight className="w-5 h-5" />
-                  Load More Markets
+                  <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span>Load More Markets</span>
                 </>
               )}
             </button>
