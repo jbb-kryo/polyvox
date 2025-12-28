@@ -278,6 +278,35 @@ Comprehensive error tracking system that captures and monitors all application e
 
 See [ERROR_TRACKING_GUIDE.md](ERROR_TRACKING_GUIDE.md) for detailed documentation.
 
+### Trading Activity Logs
+
+Comprehensive audit trail system for all trading activities:
+
+**Features:**
+- All trading operations logged (scans, executions, orders, positions)
+- Searchable log viewer with advanced filtering
+- Log levels: debug, info, warn, error
+- Performance tracking with duration metrics
+- Success/failure tracking
+- CSV export for external analysis
+- Configurable retention policy (7-365 days)
+- Module-specific logging
+
+**Components:**
+- `tradingLogger` service - Batched logging with helper methods
+- `TradingActivityLogViewer` - Search, filter, and export logs
+- `LogRetentionManager` - Manage log storage and cleanup
+- `ActivityTimer` - Automatic performance tracking
+
+**Use Cases:**
+- Debugging trading strategies
+- Performance optimization
+- Compliance and auditing
+- Understanding bot behavior
+- Tracking execution success rates
+
+See [TRADING_ACTIVITY_LOGS_GUIDE.md](TRADING_ACTIVITY_LOGS_GUIDE.md) for detailed documentation.
+
 ## API Integration
 
 ### Polymarket API

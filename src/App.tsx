@@ -56,8 +56,9 @@ const PositionsOverview = lazy(() => import('./components/PositionsOverview'));
 const PositionHistoryView = lazy(() => import('./components/PositionHistoryView'));
 const RiskLimitsManager = lazy(() => import('./components/RiskLimitsManager'));
 const ErrorDashboard = lazy(() => import('./components/ErrorDashboard').then(m => ({ default: m.ErrorDashboard })));
+const TradingActivityLogViewer = lazy(() => import('./components/TradingActivityLogViewer').then(m => ({ default: m.TradingActivityLogViewer })));
 
-type View = 'dashboard' | 'modules' | 'analytics' | 'markets' | 'positions' | 'history' | 'risk-limits' | 'arbitrage-hunter' | 'trendrider' | 'snipe-master' | 'whale-watcher' | 'value-miner' | 'docs' | 'errors';
+type View = 'dashboard' | 'modules' | 'analytics' | 'markets' | 'positions' | 'history' | 'risk-limits' | 'arbitrage-hunter' | 'trendrider' | 'snipe-master' | 'whale-watcher' | 'value-miner' | 'docs' | 'errors' | 'activity-logs';
 
 function App() {
   const { user, profile, loading: authLoading, signOut } = useAuth();
@@ -336,6 +337,12 @@ function App() {
         return (
           <Suspense fallback={<ComponentLoadingFallback name="Error Dashboard" />}>
             <ErrorDashboard />
+          </Suspense>
+        );
+      case 'activity-logs':
+        return (
+          <Suspense fallback={<ComponentLoadingFallback name="Activity Logs" />}>
+            <TradingActivityLogViewer />
           </Suspense>
         );
       case 'arbitrage-hunter':
