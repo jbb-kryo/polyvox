@@ -125,7 +125,7 @@ export function useRealtimeDashboard(options: UseRealtimeDashboardOptions = {}) 
       const winRate = trades.length > 0 ? (winningTrades.length / trades.length) * 100 : 0;
 
       const getModuleStatus = (moduleName: string) => {
-        const setting = moduleSettings.find(s => s.module_name === moduleName);
+        const setting = moduleSettings.find(s => s.module_id === moduleName);
         return setting?.is_enabled || false;
       };
 
@@ -241,6 +241,17 @@ export function useRealtimeDashboard(options: UseRealtimeDashboardOptions = {}) 
           event: '*',
           schema: 'public',
           table: 'order_executions',
+        },
+        () => {
+          fetchDashboardData();
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'module_settings',
         },
         () => {
           fetchDashboardData();

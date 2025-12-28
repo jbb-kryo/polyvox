@@ -10,6 +10,16 @@ export interface ModuleSettings {
   updatedAt?: string;
 }
 
+interface ModuleSettingsDb {
+  id: string;
+  user_id: string;
+  module_id: string;
+  is_enabled: boolean;
+  settings: Record<string, any>;
+  created_at: string;
+  updated_at: string;
+}
+
 const DEFAULT_USER_ID = '00000000-0000-0000-0000-000000000000';
 
 export async function getUserId(): Promise<string> {
@@ -25,7 +35,7 @@ export async function getModuleSettings(moduleName: string): Promise<ModuleSetti
       .from('module_settings')
       .select('*')
       .eq('user_id', userId)
-      .eq('module_name', moduleName)
+      .eq('module_id', moduleName)
       .maybeSingle();
 
     if (error) {
@@ -37,14 +47,16 @@ export async function getModuleSettings(moduleName: string): Promise<ModuleSetti
       return null;
     }
 
+    const dbData = data as ModuleSettingsDb;
+
     return {
-      id: data.id,
-      userId: data.user_id,
-      moduleName: data.module_name,
-      isActive: data.is_active,
-      settings: data.settings || {},
-      createdAt: data.created_at,
-      updatedAt: data.updated_at
+      id: dbData.id,
+      userId: dbData.user_id,
+      moduleName: dbData.module_id as 'arbitrage' | 'trend' | 'snipe' | 'whale' | 'value',
+      isActive: dbData.is_enabled,
+      settings: dbData.settings || {},
+      createdAt: dbData.created_at,
+      updatedAt: dbData.updated_at
     };
   } catch (error) {
     console.error('Error in getModuleSettings:', error);
@@ -64,12 +76,12 @@ export async function saveModuleSettings(
       .from('module_settings')
       .upsert({
         user_id: userId,
-        module_name: moduleName,
-        is_active: isActive,
+        module_id: moduleName,
+        is_enabled: isActive,
         settings: settings,
         updated_at: new Date().toISOString()
       }, {
-        onConflict: 'user_id,module_name'
+        onConflict: 'user_id,module_id'
       });
 
     if (error) {
@@ -91,11 +103,11 @@ export async function deactivateModule(moduleName: string): Promise<boolean> {
     const { error } = await supabase
       .from('module_settings')
       .update({
-        is_active: false,
+        is_enabled: false,
         updated_at: new Date().toISOString()
       })
       .eq('user_id', userId)
-      .eq('module_name', moduleName);
+      .eq('module_id', moduleName);
 
     if (error) {
       console.error('Error deactivating module:', error);
@@ -123,11 +135,11 @@ export async function getAllModuleSettings(): Promise<ModuleSettings[]> {
       return [];
     }
 
-    return (data || []).map(item => ({
+    return (data || []).map((item: ModuleSettingsDb) => ({
       id: item.id,
       userId: item.user_id,
-      moduleName: item.module_name,
-      isActive: item.is_active,
+      moduleName: item.module_id as 'arbitrage' | 'trend' | 'snipe' | 'whale' | 'value',
+      isActive: item.is_enabled,
       settings: item.settings || {},
       createdAt: item.created_at,
       updatedAt: item.updated_at
