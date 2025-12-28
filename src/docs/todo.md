@@ -380,12 +380,12 @@ This document outlines all remaining tasks to make PolyVOX fully functional, liv
 **Prompt:** "Implement comprehensive notification system for important events: new opportunities, trade executions, stop losses hit, errors, low balance, etc. Support toast notifications and persistent notification center."
 
 **Acceptance Criteria:**
-- [ ] Toast notifications for instant alerts
-- [ ] Persistent notification center/inbox
-- [ ] Notification types: success, warning, error, info
-- [ ] User preferences for notification types
-- [ ] Mark as read/unread
-- [ ] Notification history
+- [X] Toast notifications for instant alerts
+- [X] Persistent notification center/inbox
+- [X] Notification types: success, warning, error, info
+- [X] User preferences for notification types
+- [X] Mark as read/unread
+- [X] Notification history
 
 **Files to Create:**
 - `src/services/notificationService.ts`
