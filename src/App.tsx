@@ -45,6 +45,7 @@ import EmergencyStopButton from './components/EmergencyStopButton';
 import PositionsOverview from './components/PositionsOverview';
 import PositionHistoryView from './components/PositionHistoryView';
 import RiskLimitsManager from './components/RiskLimitsManager';
+import { NotificationCenter } from './components/NotificationCenter';
 import { fetchMarkets } from './services/polymarket';
 import { fetchPlatformMetrics, formatCurrency, PlatformMetrics } from './services/platformMetrics';
 import { getAllModuleSettings } from './services/database/moduleSettings';
@@ -427,6 +428,8 @@ function App() {
                   <EmergencyStopButton />
                 </div>
               )}
+
+              {user && <NotificationCenter />}
 
               <button
                 onClick={() => setSettingsModalOpen(true)}

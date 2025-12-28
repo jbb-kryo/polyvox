@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { X, Eye, EyeOff, Activity, TestTube, Globe, Wallet, Lock, AlertTriangle } from 'lucide-react';
+import { X, Eye, EyeOff, Activity, TestTube, Globe, Wallet, Lock, AlertTriangle, Bell } from 'lucide-react';
 import { GlobalSettings } from '../types';
 import { useAuth } from '../contexts/AuthContext';
+import { useNotifications } from '../contexts/NotificationContext';
 import WalletSetupModal from './WalletSetupModal';
 
 interface SettingsModalProps {
@@ -14,6 +15,7 @@ interface SettingsModalProps {
 
 export default function SettingsModal({ isOpen, onClose, settings, onSave, onRequestLiveTrading }: SettingsModalProps) {
   const { profile } = useAuth();
+  const { preferences, updatePreferences } = useNotifications();
   const [localSettings, setLocalSettings] = useState<GlobalSettings>(settings);
   const [showPrivateKey, setShowPrivateKey] = useState(false);
   const [walletSetupOpen, setWalletSetupOpen] = useState(false);
@@ -188,6 +190,146 @@ export default function SettingsModal({ isOpen, onClose, settings, onSave, onReq
                   <div className="w-2 h-2 rounded-full bg-yellow-500 animate-pulse"></div>
                   <span className="text-xs text-yellow-500 font-medium">Checking</span>
                 </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-gray-900 border border-gray-700 rounded-lg p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <Bell className="w-6 h-6 text-blue-400" />
+              <div>
+                <h3 className="text-lg font-semibold text-white">Notification Preferences</h3>
+                <p className="text-xs text-gray-400">Customize your notification settings</p>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <div className="flex items-center justify-between p-3 bg-gray-800 rounded-lg">
+                <div>
+                  <p className="text-sm font-medium text-gray-200">Toast Notifications</p>
+                  <p className="text-xs text-gray-400">Show popup notifications</p>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={preferences?.enable_toast ?? true}
+                    onChange={(e) => updatePreferences({ enable_toast: e.target.checked })}
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                </label>
+              </div>
+
+              <div className="flex items-center justify-between p-3 bg-gray-800 rounded-lg">
+                <div>
+                  <p className="text-sm font-medium text-gray-200">Opportunity Alerts</p>
+                  <p className="text-xs text-gray-400">New trading opportunities</p>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={preferences?.enable_opportunity_notifications ?? true}
+                    onChange={(e) => updatePreferences({ enable_opportunity_notifications: e.target.checked })}
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                </label>
+              </div>
+
+              <div className="flex items-center justify-between p-3 bg-gray-800 rounded-lg">
+                <div>
+                  <p className="text-sm font-medium text-gray-200">Execution Notifications</p>
+                  <p className="text-xs text-gray-400">Trade execution confirmations</p>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={preferences?.enable_execution_notifications ?? true}
+                    onChange={(e) => updatePreferences({ enable_execution_notifications: e.target.checked })}
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                </label>
+              </div>
+
+              <div className="flex items-center justify-between p-3 bg-gray-800 rounded-lg">
+                <div>
+                  <p className="text-sm font-medium text-gray-200">Stop Loss Alerts</p>
+                  <p className="text-xs text-gray-400">Stop loss triggered notifications</p>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={preferences?.enable_stop_loss_notifications ?? true}
+                    onChange={(e) => updatePreferences({ enable_stop_loss_notifications: e.target.checked })}
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                </label>
+              </div>
+
+              <div className="flex items-center justify-between p-3 bg-gray-800 rounded-lg">
+                <div>
+                  <p className="text-sm font-medium text-gray-200">Error Notifications</p>
+                  <p className="text-xs text-gray-400">System errors and failures</p>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={preferences?.enable_error_notifications ?? true}
+                    onChange={(e) => updatePreferences({ enable_error_notifications: e.target.checked })}
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                </label>
+              </div>
+
+              <div className="flex items-center justify-between p-3 bg-gray-800 rounded-lg">
+                <div>
+                  <p className="text-sm font-medium text-gray-200">Low Balance Alerts</p>
+                  <p className="text-xs text-gray-400">Insufficient funds warnings</p>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={preferences?.enable_low_balance_notifications ?? true}
+                    onChange={(e) => updatePreferences({ enable_low_balance_notifications: e.target.checked })}
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                </label>
+              </div>
+
+              <div className="flex items-center justify-between p-3 bg-gray-800 rounded-lg">
+                <div>
+                  <p className="text-sm font-medium text-gray-200">Position Updates</p>
+                  <p className="text-xs text-gray-400">Position changes and updates</p>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={preferences?.enable_position_updates ?? true}
+                    onChange={(e) => updatePreferences({ enable_position_updates: e.target.checked })}
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                </label>
+              </div>
+
+              <div className="flex items-center justify-between p-3 bg-gray-800 rounded-lg">
+                <div>
+                  <p className="text-sm font-medium text-gray-200">Module Alerts</p>
+                  <p className="text-xs text-gray-400">Module-specific notifications</p>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={preferences?.enable_module_alerts ?? true}
+                    onChange={(e) => updatePreferences({ enable_module_alerts: e.target.checked })}
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                </label>
               </div>
             </div>
           </div>
