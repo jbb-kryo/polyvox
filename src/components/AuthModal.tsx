@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { X, Mail, Lock, AlertCircle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { validateEmail, validatePassword } from '../services/auth';
+import { sanitizeEmail, sanitizeString } from '../utils/sanitization';
 import toast from 'react-hot-toast';
 
 interface AuthModalProps {
@@ -28,14 +29,17 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }: Au
     setLoading(true);
 
     try {
+      const sanitizedEmail = sanitizeEmail(email);
+      const sanitizedPassword = sanitizeString(password, 100);
+
       if (mode === 'reset') {
-        if (!validateEmail(email)) {
+        if (!sanitizedEmail || !validateEmail(sanitizedEmail)) {
           setError('Please enter a valid email address');
           setLoading(false);
           return;
         }
 
-        const { error } = await resetPassword(email);
+        const { error } = await resetPassword(sanitizedEmail);
         if (error) {
           setError(error.message);
         } else {
@@ -43,26 +47,33 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }: Au
           onClose();
         }
       } else if (mode === 'register') {
-        if (!validateEmail(email)) {
+        if (!sanitizedEmail || !validateEmail(sanitizedEmail)) {
           setError('Please enter a valid email address');
           setLoading(false);
           return;
         }
 
-        const passwordValidation = validatePassword(password);
+        if (!sanitizedPassword || sanitizedPassword.length === 0) {
+          setError('Password is required');
+          setLoading(false);
+          return;
+        }
+
+        const passwordValidation = validatePassword(sanitizedPassword);
         if (!passwordValidation.valid) {
           setError(passwordValidation.message);
           setLoading(false);
           return;
         }
 
-        if (password !== confirmPassword) {
+        const sanitizedConfirmPassword = sanitizeString(confirmPassword, 100);
+        if (sanitizedPassword !== sanitizedConfirmPassword) {
           setError('Passwords do not match');
           setLoading(false);
           return;
         }
 
-        const { error } = await signUp(email, password);
+        const { error } = await signUp(sanitizedEmail, sanitizedPassword);
         if (error) {
           setError(error.message);
         } else {
@@ -70,19 +81,19 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login' }: Au
           onClose();
         }
       } else {
-        if (!validateEmail(email)) {
+        if (!sanitizedEmail || !validateEmail(sanitizedEmail)) {
           setError('Please enter a valid email address');
           setLoading(false);
           return;
         }
 
-        if (!password) {
+        if (!sanitizedPassword || sanitizedPassword.length === 0) {
           setError('Please enter your password');
           setLoading(false);
           return;
         }
 
-        const { error } = await signIn(email, password);
+        const { error } = await signIn(sanitizedEmail, sanitizedPassword);
         if (error) {
           setError(error.message);
         } else {

@@ -15,6 +15,7 @@ import {
 import toast from 'react-hot-toast';
 import { useAuth } from '../contexts/AuthContext';
 import riskLimitsService, { RiskLimits, DailyLossTracking, RiskLimitBreach } from '../services/riskLimits';
+import { sanitizeNumber, clampNumber } from '../utils/validation';
 
 export default function RiskLimitsManager() {
   const { user } = useAuth();
@@ -87,9 +88,39 @@ export default function RiskLimitsManager() {
   const handleSave = async () => {
     if (!user?.id) return;
 
+    const sanitizedData = {
+      maxPositionSize: clampNumber(sanitizeNumber(formData.maxPositionSize, 0), 0, 1000000),
+      maxPositionSizeEnabled: formData.maxPositionSizeEnabled,
+      maxPositionsPerMarket: clampNumber(sanitizeNumber(formData.maxPositionsPerMarket, 0), 1, 100),
+      maxPositionsPerMarketEnabled: formData.maxPositionsPerMarketEnabled,
+      maxTotalExposure: clampNumber(sanitizeNumber(formData.maxTotalExposure, 0), 0, 10000000),
+      maxTotalExposureEnabled: formData.maxTotalExposureEnabled,
+      maxOpenPositions: clampNumber(sanitizeNumber(formData.maxOpenPositions, 0), 1, 1000),
+      maxOpenPositionsEnabled: formData.maxOpenPositionsEnabled,
+      maxDailyLoss: clampNumber(sanitizeNumber(formData.maxDailyLoss, 0), 0, 1000000),
+      maxDailyLossEnabled: formData.maxDailyLossEnabled,
+      enforceLimits: formData.enforceLimits,
+      alertOnBreach: formData.alertOnBreach
+    };
+
+    if (sanitizedData.maxPositionSize <= 0 && sanitizedData.maxPositionSizeEnabled) {
+      toast.error('Max position size must be greater than 0');
+      return;
+    }
+
+    if (sanitizedData.maxTotalExposure <= 0 && sanitizedData.maxTotalExposureEnabled) {
+      toast.error('Max total exposure must be greater than 0');
+      return;
+    }
+
+    if (sanitizedData.maxDailyLoss <= 0 && sanitizedData.maxDailyLossEnabled) {
+      toast.error('Max daily loss must be greater than 0');
+      return;
+    }
+
     setIsSaving(true);
     try {
-      const success = await riskLimitsService.updateRiskLimits(user.id, formData);
+      const success = await riskLimitsService.updateRiskLimits(user.id, sanitizedData);
 
       if (success) {
         toast.success('Risk limits updated successfully');
