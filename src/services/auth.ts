@@ -10,6 +10,11 @@ export interface UserProfile {
   created_at: string;
   updated_at: string;
   last_login_at: string;
+  terms_accepted_at?: string;
+  privacy_accepted_at?: string;
+  terms_version?: string;
+  privacy_version?: string;
+  risk_disclaimer_acknowledged?: boolean;
 }
 
 export interface AuthResponse {

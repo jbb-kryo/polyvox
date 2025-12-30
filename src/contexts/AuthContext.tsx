@@ -16,12 +16,14 @@ import {
   encryptPrivateKey,
   decryptPrivateKey,
 } from '../services/auth';
+import LegalAcceptanceModal from '../components/LegalAcceptanceModal';
 
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   profile: UserProfile | null;
   loading: boolean;
+  needsLegalAcceptance: boolean;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signUp: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
@@ -34,6 +36,7 @@ interface AuthContextType {
     masterPassword: string
   ) => Promise<{ error: any }>;
   getDecryptedPrivateKey: (masterPassword: string) => Promise<string | null>;
+  refreshProfile: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -55,6 +58,33 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [needsLegalAcceptance, setNeedsLegalAcceptance] = useState(false);
+
+  const checkLegalAcceptance = (userProfile: UserProfile | null) => {
+    if (!userProfile) {
+      setNeedsLegalAcceptance(false);
+      return;
+    }
+
+    const needsAcceptance =
+      !userProfile.terms_accepted_at ||
+      !userProfile.privacy_accepted_at ||
+      !userProfile.risk_disclaimer_acknowledged;
+
+    setNeedsLegalAcceptance(needsAcceptance);
+  };
+
+  const refreshProfile = async () => {
+    if (!user) return;
+
+    try {
+      const userProfile = await getUserProfile(user.id);
+      setProfile(userProfile);
+      checkLegalAcceptance(userProfile);
+    } catch (error) {
+      console.error('Error refreshing profile:', error);
+    }
+  };
 
   useEffect(() => {
     const initAuth = async () => {
@@ -68,6 +98,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         if (currentUser) {
           const userProfile = await getUserProfile(currentUser.id);
           setProfile(userProfile);
+          checkLegalAcceptance(userProfile);
         }
       } catch (error) {
         console.error('Error initializing auth:', error);
@@ -85,14 +116,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
       if (newSession?.user) {
         const userProfile = await getUserProfile(newSession.user.id);
         setProfile(userProfile);
+        checkLegalAcceptance(userProfile);
       } else {
         setProfile(null);
+        setNeedsLegalAcceptance(false);
       }
 
       if (event === 'SIGNED_OUT') {
         setUser(null);
         setSession(null);
         setProfile(null);
+        setNeedsLegalAcceptance(false);
       }
     });
 
@@ -194,6 +228,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     session,
     profile,
     loading,
+    needsLegalAcceptance,
     signIn,
     signUp,
     signOut,
@@ -202,11 +237,23 @@ export function AuthProvider({ children }: AuthProviderProps) {
     updateProfile,
     setWalletCredentials,
     getDecryptedPrivateKey,
+    refreshProfile,
+  };
+
+  const handleLegalAcceptance = async () => {
+    await refreshProfile();
   };
 
   return (
     <AuthContext.Provider value={value}>
       {children}
+      {needsLegalAcceptance && user && (
+        <LegalAcceptanceModal
+          isOpen={needsLegalAcceptance}
+          onAccept={handleLegalAcceptance}
+          userId={user.id}
+        />
+      )}
     </AuthContext.Provider>
   );
 }
