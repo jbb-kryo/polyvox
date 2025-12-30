@@ -1,4 +1,5 @@
 import { supabase } from '../../lib/supabase';
+import rateLimiter from '../rateLimiter';
 
 export interface ModuleSettings {
   id?: string;
@@ -72,6 +73,17 @@ export async function saveModuleSettings(
   try {
     const userId = await getUserId();
 
+    const rateLimitCheck = await rateLimiter.checkRateLimit(
+      userId,
+      'module_toggle',
+      { moduleName, isActive }
+    );
+
+    if (rateLimitCheck.limited) {
+      rateLimiter.showRateLimitToast(rateLimitCheck, 'Module toggle');
+      return false;
+    }
+
     const { error } = await supabase
       .from('module_settings')
       .upsert({
@@ -99,6 +111,17 @@ export async function saveModuleSettings(
 export async function deactivateModule(moduleName: string): Promise<boolean> {
   try {
     const userId = await getUserId();
+
+    const rateLimitCheck = await rateLimiter.checkRateLimit(
+      userId,
+      'module_toggle',
+      { moduleName, action: 'deactivate' }
+    );
+
+    if (rateLimitCheck.limited) {
+      rateLimiter.showRateLimitToast(rateLimitCheck, 'Module deactivation');
+      return false;
+    }
 
     const { error } = await supabase
       .from('module_settings')

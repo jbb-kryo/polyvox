@@ -1,5 +1,6 @@
 import { ethers } from 'ethers';
 import { supabase } from '../lib/supabase';
+import rateLimiter from './rateLimiter';
 import {
   signOrder,
   submitOrder,
@@ -97,6 +98,22 @@ export class OrderExecutionService {
 
   async createOrder(request: CreateOrderRequest): Promise<Order> {
     try {
+      const rateLimitCheck = await rateLimiter.checkRateLimit(
+        request.userId,
+        'trade_execution',
+        {
+          moduleType: request.moduleType,
+          marketId: request.marketId,
+          side: request.side,
+          paperTrading: request.paperTrading
+        }
+      );
+
+      if (rateLimitCheck.limited) {
+        rateLimiter.showRateLimitToast(rateLimitCheck, 'Trade execution');
+        throw new Error(rateLimiter.formatRateLimitError(rateLimitCheck));
+      }
+
       const { data: order, error } = await supabase
         .from('orders')
         .insert({

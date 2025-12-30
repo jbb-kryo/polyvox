@@ -1,4 +1,5 @@
 import { supabase } from '../lib/supabase';
+import rateLimiter from './rateLimiter';
 
 export enum RequestPriority {
   CRITICAL = 0,
@@ -147,6 +148,33 @@ export class APIRateLimiter {
 
     this.startCacheCleanup();
     this.startMetricsReporting();
+  }
+
+  async requestWithUserLimit<T>(
+    userId: string,
+    key: string,
+    executor: () => Promise<T>,
+    options: {
+      priority?: RequestPriority;
+      cacheConfig?: Partial<CacheConfig>;
+      retryConfig?: Partial<RetryConfig>;
+      endpoint?: string;
+      skipCache?: boolean;
+      skipQueue?: boolean;
+    } = {}
+  ): Promise<T> {
+    const check = await rateLimiter.checkRateLimit(
+      userId,
+      'api_call',
+      { endpoint: options.endpoint || 'default', key }
+    );
+
+    if (check.limited) {
+      rateLimiter.showRateLimitToast(check, 'API call');
+      throw new Error(rateLimiter.formatRateLimitError(check));
+    }
+
+    return this.request(key, executor, options);
   }
 
   async request<T>(
