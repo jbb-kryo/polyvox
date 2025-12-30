@@ -1,6 +1,20 @@
 Contact: https://github.com/jbb-kryo/polyvox/security/advisories/new
-Expires: 2025-12-31T23:59:59.000Z
+Expires: 2026-12-31T23:59:59.000Z
 Preferred-Languages: en
 Canonical: https://polyvox.app/.well-known/security.txt
 Policy: https://github.com/jbb-kryo/polyvox/blob/main/SECURITY.md
 Acknowledgments: https://github.com/jbb-kryo/polyvox/blob/main/SECURITY.md#acknowledgments
+Hiring: https://github.com/jbb-kryo/polyvox#contributing
+
+# Vulnerability Disclosure Policy
+# We welcome responsible security researchers to report vulnerabilities.
+# Please review our security policy before reporting:
+# https://github.com/jbb-kryo/polyvox/blob/main/SECURITY.md
+#
+# Scope: All components of PolyVOX platform
+# Out of Scope: Third-party dependencies (report to respective maintainers)
+#
+# We are considering a bug bounty program for critical vulnerabilities.
+# Valid security reports will be acknowledged in our security advisories.
+#
+# Thank you for helping keep PolyVOX secure!

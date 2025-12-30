@@ -97,3 +97,52 @@ export function sanitizeForAnalytics(data: Record<string, any>): Record<string, 
 
   return sanitized;
 }
+
+export function sanitizeObject(obj: any): any {
+  if (!obj || typeof obj !== 'object') {
+    return obj;
+  }
+
+  if (Array.isArray(obj)) {
+    return obj.map(item => sanitizeObject(item));
+  }
+
+  const sanitized: any = {};
+  for (const [key, value] of Object.entries(obj)) {
+    if (isSensitiveKey(key)) {
+      sanitized[key] = REDACTED_TEXT;
+    } else if (typeof value === 'string') {
+      sanitized[key] = sanitizeString(value);
+    } else if (typeof value === 'object' && value !== null) {
+      sanitized[key] = sanitizeObject(value);
+    } else {
+      sanitized[key] = value;
+    }
+  }
+
+  return sanitized;
+}
+
+export function sanitizeUrl(url: string): string {
+  try {
+    const urlObj = new URL(url);
+    const params = new URLSearchParams(urlObj.search);
+    let modified = false;
+
+    for (const [key] of params) {
+      if (isSensitiveKey(key)) {
+        params.set(key, REDACTED_TEXT);
+        modified = true;
+      }
+    }
+
+    if (modified) {
+      urlObj.search = params.toString();
+      return urlObj.toString();
+    }
+
+    return url;
+  } catch {
+    return sanitizeString(url);
+  }
+}

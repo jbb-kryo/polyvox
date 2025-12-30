@@ -171,6 +171,44 @@ Demo mode uses simulated data and doesn't execute real trades.
 - No market impact
 - Historical data only
 
+## Bug Bounty Program
+
+### Rewards
+
+We are considering implementing a bug bounty program to reward security researchers who help improve PolyVOX security.
+
+**Potential Reward Tiers** (under consideration):
+- **Critical**: Security vulnerabilities that could lead to loss of funds or private keys
+- **High**: Authentication bypasses, data exposure, or significant security flaws
+- **Medium**: Security issues with limited impact or requiring complex exploitation
+- **Low**: Minor security concerns with minimal impact
+
+**Recognition**: All valid security reports will be acknowledged in our security advisories and README (with permission).
+
+**Note**: Bug bounty program is currently under consideration. Check our security policy for updates.
+
+### Qualifying Vulnerabilities
+
+**In Scope**:
+- Private key exposure or theft
+- Authentication and authorization bypasses
+- SQL injection or database vulnerabilities
+- Cross-site scripting (XSS)
+- Cross-site request forgery (CSRF)
+- Remote code execution
+- Trading logic vulnerabilities
+- Rate limit bypasses
+- Secrets exposure in code, logs, or error messages
+
+**Out of Scope**:
+- Issues in third-party dependencies (report to maintainers)
+- Denial of service attacks
+- Social engineering attacks
+- Physical attacks
+- Issues requiring physical access to a user's device
+- Browser-specific issues
+- Vulnerabilities in demo/paper trading mode
+
 ## Vulnerability Disclosure Policy
 
 ### Our Commitment
@@ -179,15 +217,18 @@ Demo mode uses simulated data and doesn't execute real trades.
 - We will keep you informed throughout the investigation
 - We will credit researchers who report valid vulnerabilities (if desired)
 - We will not pursue legal action against researchers who follow this policy
+- We are considering monetary rewards for critical vulnerability discoveries
 
 ### Responsible Disclosure
 
 We kindly request that security researchers:
 
-- Give us reasonable time to fix vulnerabilities before public disclosure
+- Give us reasonable time to fix vulnerabilities before public disclosure (minimum 90 days)
 - Make a good faith effort to avoid privacy violations and data destruction
 - Do not exploit vulnerabilities beyond proof of concept
 - Do not perform attacks that could harm users or degrade service
+- Do not access or modify user data beyond what is necessary to demonstrate the vulnerability
+- Report vulnerabilities through our official channels only
 
 ## Security Updates
 
