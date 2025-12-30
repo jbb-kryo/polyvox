@@ -523,11 +523,11 @@ This document outlines all remaining tasks to make PolyVOX fully functional, liv
 **Prompt:** "Implement rate limiting on API calls and trading actions to prevent abuse and accidental spam."
 
 **Acceptance Criteria:**
-- [ ] Rate limits on module activation
-- [ ] Trade execution throttling
-- [ ] API call rate limiting
-- [ ] User-specific quotas
-- [ ] Clear rate limit errors
+- [X] Rate limits on module activation
+- [X] Trade execution throttling
+- [X] API call rate limiting
+- [X] User-specific quotas
+- [X] Clear rate limit errors
 
 ### 13.3 Secrets Management
 **Prompt:** "Ensure no secrets in code, localStorage, or logs. Use environment variables and secure vaults. Add security.txt and vulnerability disclosure policy."
