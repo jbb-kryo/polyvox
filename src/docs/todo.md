@@ -533,12 +533,12 @@ This document outlines all remaining tasks to make PolyVOX fully functional, liv
 **Prompt:** "Ensure no secrets in code, localStorage, or logs. Use environment variables and secure vaults. Add security.txt and vulnerability disclosure policy."
 
 **Acceptance Criteria:**
-- [ ] No hardcoded API keys
-- [ ] Environment variables for secrets
-- [ ] No secrets in logs
-- [ ] No secrets in error messages
-- [ ] Security.txt file present
-- [ ] Bug bounty consideration
+- [X] No hardcoded API keys
+- [X] Environment variables for secrets
+- [X] No secrets in logs
+- [X] No secrets in error messages
+- [X] Security.txt file present
+- [X] Bug bounty consideration
 
 ---
 
